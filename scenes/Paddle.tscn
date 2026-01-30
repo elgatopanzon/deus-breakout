@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://cdujo7up8d5m0"]
+
+[ext_resource type="Script" uid="uid://craec7wkodtlh" path="res://addons/deus/classes/nodes/DeusConfiguration.gd" id="1_deus_cfg"]
+[ext_resource type="Script" uid="uid://r24q5d5lsjcl" path="res://addons/deus/classes/resources/ComponentConfig.gd" id="2_comp_cfg"]
+[ext_resource type="Script" uid="uid://ckrgeyrpt0sap" path="res://classes/components/Position.gd" id="3_pos"]
+[ext_resource type="Script" uid="uid://biuv6l7nx084l" path="res://classes/components/Size.gd" id="4_size"]
+[ext_resource type="Script" uid="uid://7bijtgh7w0gc" path="res://classes/components/Speed.gd" id="5_speed"]
+[ext_resource type="Script" uid="uid://c5gbsllh0e454" path="res://classes/components/InputIntent.gd" id="6_intent"]
+
+[sub_resource type="Resource" id="Resource_pos"]
+script = ExtResource("3_pos")
+value = Vector2(516, 620)
+
+[sub_resource type="Resource" id="Resource_pos_cfg"]
+script = ExtResource("2_comp_cfg")
+component = SubResource("Resource_pos")
+
+[sub_resource type="Resource" id="Resource_size"]
+script = ExtResource("4_size")
+value = Vector2(120, 20)
+
+[sub_resource type="Resource" id="Resource_size_cfg"]
+script = ExtResource("2_comp_cfg")
+component = SubResource("Resource_size")
+
+[sub_resource type="Resource" id="Resource_speed"]
+script = ExtResource("5_speed")
+value = 500.0
+
+[sub_resource type="Resource" id="Resource_speed_cfg"]
+script = ExtResource("2_comp_cfg")
+component = SubResource("Resource_speed")
+
+[sub_resource type="Resource" id="Resource_intent"]
+script = ExtResource("6_intent")
+
+[sub_resource type="Resource" id="Resource_intent_cfg"]
+script = ExtResource("2_comp_cfg")
+component = SubResource("Resource_intent")
+
+[node name="Paddle" type="ColorRect" unique_id=540223566]
+offset_left = 516.0
+offset_top = 620.0
+offset_right = 636.0
+offset_bottom = 640.0
+
+[node name="DeusConfiguration" type="Node" parent="." unique_id=1889661370]
+script = ExtResource("1_deus_cfg")
+node_id = "paddle"
+components = Array[ExtResource("2_comp_cfg")]([SubResource("Resource_pos_cfg"), SubResource("Resource_size_cfg"), SubResource("Resource_speed_cfg"), SubResource("Resource_intent_cfg")])
