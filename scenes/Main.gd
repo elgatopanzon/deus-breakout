@@ -10,6 +10,7 @@
 extends Node2D
 
 const BrickScene = preload("res://scenes/Brick.tscn")
+const HUDScene = preload("res://scenes/HUD.tscn")
 
 const BRICK_COLS = 8
 const BRICK_ROWS = 5
@@ -54,86 +55,14 @@ func _ready():
 	Deus.set_component(Deus, GameState, GameState.new())
 
 	_spawn_bricks()
-	_create_hud()
 
-func _create_hud():
-	var canvas = CanvasLayer.new()
-	canvas.name = "HUD"
-	add_child(canvas)
+	var hud = HUDScene.instantiate()
+	add_child(hud)
 
-	var vp_width = get_viewport_rect().size.x
-
-	var score_label = Label.new()
-	score_label.name = "ScoreLabel"
-	score_label.position = Vector2(10, 10)
-	score_label.text = "Score: 0"
-	score_label.add_theme_font_size_override("font_size", 24)
-	score_label.add_to_group("hud_score")
-	canvas.add_child(score_label)
-
-	var lives_label = Label.new()
-	lives_label.name = "LivesLabel"
-	lives_label.position = Vector2(vp_width - 130, 10)
-	lives_label.text = "Lives: 3"
-	lives_label.add_theme_font_size_override("font_size", 24)
-	lives_label.add_to_group("hud_lives")
-	canvas.add_child(lives_label)
-
-	# Win/lose overlay — centered panel, hidden by default
-	var vp = get_viewport_rect().size
-	var game_overlay = _create_overlay_panel(canvas, "game_overlay", vp)
-	game_overlay.visible = false
-
-	# Pause overlay — centered text, hidden by default
-	var pause_label = Label.new()
-	pause_label.name = "PauseOverlay"
-	pause_label.text = "PAUSED"
-	pause_label.add_theme_font_size_override("font_size", 48)
-	pause_label.position = Vector2(vp.x / 2.0 - 100, vp.y / 2.0 - 30)
-	pause_label.visible = false
-	pause_label.add_to_group("pause_overlay")
-	canvas.add_child(pause_label)
-
-func _create_overlay_panel(parent: Node, group: String, vp: Vector2) -> Control:
-	var panel = PanelContainer.new()
-	panel.name = "GameOverlay"
-	panel.position = Vector2(vp.x / 2.0 - 150, vp.y / 2.0 - 80)
-	panel.custom_minimum_size = Vector2(300, 160)
-	panel.add_to_group(group)
-	parent.add_child(panel)
-
-	var vbox = VBoxContainer.new()
-	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
-	panel.add_child(vbox)
-
-	var title = Label.new()
-	title.name = "Title"
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_size_override("font_size", 36)
-	title.add_to_group("overlay_title")
-	vbox.add_child(title)
-
-	var score = Label.new()
-	score.name = "Score"
-	score.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	score.add_theme_font_size_override("font_size", 24)
-	score.add_to_group("overlay_score")
-	vbox.add_child(score)
-
-	var spacer = Control.new()
-	spacer.custom_minimum_size = Vector2(0, 10)
-	vbox.add_child(spacer)
-
-	var restart_btn = Button.new()
-	restart_btn.name = "RestartButton"
-	restart_btn.text = "Play Again"
-	restart_btn.pressed.connect(_on_restart)
-	vbox.add_child(restart_btn)
-
-	return panel
-
-func _on_restart():
-	get_tree().reload_current_scene()
+	# Wire restart button — HUD is pure layout, Main handles control flow
+	var btn = get_tree().get_first_node_in_group("restart_button")
+	if btn:
+		btn.pressed.connect(get_tree().reload_current_scene)
 
 func _spawn_bricks():
 	# HP per row — top rows are tougher (classic breakout pattern)
