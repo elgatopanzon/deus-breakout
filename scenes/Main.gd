@@ -24,7 +24,7 @@ func _ready():
 			Deus.component_registry.node_components.erase(node)
 
 	# Scheduled pipelines (run every frame)
-	for pipeline in [PaddleInputPipeline, MovementPipeline, PositionClampPipeline, BallMovementPipeline, WallReflectionPipeline, DamagePipeline, DestructionPipeline, BrickVisualSyncPipeline, BallMissedPipeline]:
+	for pipeline in [PaddleInputPipeline, MovementPipeline, PositionClampPipeline, BallMovementPipeline, WallReflectionPipeline, DamagePipeline, DestructionPipeline, BrickVisualSyncPipeline, BallMissedPipeline, PausePipeline]:
 		Deus.register_pipeline(pipeline)
 		Deus.pipeline_scheduler.register_task(
 			PipelineSchedulerDefaults.OnUpdate, pipeline
@@ -32,6 +32,10 @@ func _ready():
 
 	# Signal-only pipelines (not scheduled)
 	Deus.register_pipeline(BallDamagePipeline)
+
+	# Pause guard injects before input and ball movement — cancels when not playing
+	Deus.inject_pipeline(PauseGuardPipeline, Callable(PaddleInputPipeline, "_stage_read_input"), true)
+	Deus.inject_pipeline(PauseGuardPipeline, Callable(BallMovementPipeline, "_stage_move"), true)
 
 	# Scoring + win check inject before destruction — components still available
 	Deus.inject_pipeline(ScoringPipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
@@ -45,6 +49,7 @@ func _ready():
 	# Game state singletons on world node
 	Deus.set_component(Deus, Score, Score.new())
 	Deus.set_component(Deus, Lives, Lives.new())
+	Deus.set_component(Deus, GameState, GameState.new())
 
 	_spawn_bricks()
 
