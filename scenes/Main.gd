@@ -24,7 +24,7 @@ func _ready():
 			Deus.component_registry.node_components.erase(node)
 
 	# Scheduled pipelines (run every frame)
-	for pipeline in [PaddleInputPipeline, MovementPipeline, PositionClampPipeline, BallMovementPipeline, WallReflectionPipeline, DamagePipeline, DestructionPipeline, BrickVisualSyncPipeline, BallMissedPipeline, PausePipeline, HUDSyncPipeline]:
+	for pipeline in [PaddleInputPipeline, MovementPipeline, PositionClampPipeline, BallMovementPipeline, WallReflectionPipeline, DamagePipeline, DestructionPipeline, BrickVisualSyncPipeline, BallMissedPipeline, PausePipeline, HUDSyncPipeline, OverlaySyncPipeline]:
 		Deus.register_pipeline(pipeline)
 		Deus.pipeline_scheduler.register_task(
 			PipelineSchedulerDefaults.OnUpdate, pipeline
@@ -33,9 +33,11 @@ func _ready():
 	# Signal-only pipelines (not scheduled)
 	Deus.register_pipeline(BallDamagePipeline)
 
-	# Pause guard injects before input and ball movement — cancels when not playing
+	# Pause guard injects before gameplay pipelines — cancels when not playing
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(PaddleInputPipeline, "_stage_read_input"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(BallMovementPipeline, "_stage_move"), true)
+	Deus.inject_pipeline(PauseGuardPipeline, Callable(WallReflectionPipeline, "_stage_reflect"), true)
+	Deus.inject_pipeline(PauseGuardPipeline, Callable(BallMissedPipeline, "_stage_detect"), true)
 
 	# Scoring + win check inject before destruction — components still available
 	Deus.inject_pipeline(ScoringPipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
@@ -76,6 +78,62 @@ func _create_hud():
 	lives_label.add_theme_font_size_override("font_size", 24)
 	lives_label.add_to_group("hud_lives")
 	canvas.add_child(lives_label)
+
+	# Win/lose overlay — centered panel, hidden by default
+	var vp = get_viewport_rect().size
+	var game_overlay = _create_overlay_panel(canvas, "game_overlay", vp)
+	game_overlay.visible = false
+
+	# Pause overlay — centered text, hidden by default
+	var pause_label = Label.new()
+	pause_label.name = "PauseOverlay"
+	pause_label.text = "PAUSED"
+	pause_label.add_theme_font_size_override("font_size", 48)
+	pause_label.position = Vector2(vp.x / 2.0 - 100, vp.y / 2.0 - 30)
+	pause_label.visible = false
+	pause_label.add_to_group("pause_overlay")
+	canvas.add_child(pause_label)
+
+func _create_overlay_panel(parent: Node, group: String, vp: Vector2) -> Control:
+	var panel = PanelContainer.new()
+	panel.name = "GameOverlay"
+	panel.position = Vector2(vp.x / 2.0 - 150, vp.y / 2.0 - 80)
+	panel.custom_minimum_size = Vector2(300, 160)
+	panel.add_to_group(group)
+	parent.add_child(panel)
+
+	var vbox = VBoxContainer.new()
+	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	panel.add_child(vbox)
+
+	var title = Label.new()
+	title.name = "Title"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 36)
+	title.add_to_group("overlay_title")
+	vbox.add_child(title)
+
+	var score = Label.new()
+	score.name = "Score"
+	score.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	score.add_theme_font_size_override("font_size", 24)
+	score.add_to_group("overlay_score")
+	vbox.add_child(score)
+
+	var spacer = Control.new()
+	spacer.custom_minimum_size = Vector2(0, 10)
+	vbox.add_child(spacer)
+
+	var restart_btn = Button.new()
+	restart_btn.name = "RestartButton"
+	restart_btn.text = "Play Again"
+	restart_btn.pressed.connect(_on_restart)
+	vbox.add_child(restart_btn)
+
+	return panel
+
+func _on_restart():
+	get_tree().reload_current_scene()
 
 func _spawn_bricks():
 	# HP per row — top rows are tougher (classic breakout pattern)

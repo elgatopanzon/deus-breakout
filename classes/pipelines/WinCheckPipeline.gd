@@ -1,4 +1,4 @@
-# ABOUTME: Win check pipeline — restarts scene when last brick is destroyed
+# ABOUTME: Win check pipeline — sets GameState to WON when last brick is destroyed
 # ABOUTME: Injected before DestructionPipeline._stage_destroy after ScoringPipeline
 
 class_name WinCheckPipeline extends DefaultPipeline
@@ -14,4 +14,7 @@ static func _stage_check(context):
 	if remaining.size() > 1:
 		return
 
-	context._node.get_tree().reload_current_scene()
+	var gs = context.world.get_component(context.world, GameState)
+	if gs:
+		gs.state = GameState.State.WON
+		context.world.set_component(context.world, GameState, gs)

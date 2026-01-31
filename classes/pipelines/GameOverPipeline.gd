@@ -1,4 +1,4 @@
-# ABOUTME: Game over pipeline — restarts scene when lives reach zero
+# ABOUTME: Game over pipeline — sets GameState to LOST when lives reach zero
 # ABOUTME: Injected into BallMissedPipeline after LivesDecrementPipeline
 
 class_name GameOverPipeline extends DefaultPipeline
@@ -10,4 +10,7 @@ static func _stage_check(context):
 	if lives == null or lives.value > 0:
 		return
 
-	context._node.get_tree().reload_current_scene()
+	var gs = context.world.get_component(context.world, GameState)
+	if gs:
+		gs.state = GameState.State.LOST
+		context.world.set_component(context.world, GameState, gs)
