@@ -21,9 +21,9 @@ static func _stage_deflect(context):
 	var other_node = other if other.has_meta("id") else other.get_parent()
 
 	# Only deflect if the other entity has the Deflector component
-	var deflector = context.world.component_registry.get_component(other_node, "Deflector")
-	if deflector == null:
+	if not context.world.component_registry.has_component(other_node, "Deflector"):
 		return
+	var deflector = context.world.component_registry.get_component(other_node, "Deflector")
 
 	var other_size = context.world.component_registry.get_component(other_node, "Size")
 	var other_pos = context.world.component_registry.get_component(other_node, "Position")
