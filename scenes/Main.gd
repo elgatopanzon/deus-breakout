@@ -48,8 +48,3 @@ func _ready():
 	# Spawn brick grid
 	Deus.register_pipeline(SpawnBricksPipeline)
 	Deus.execute_pipeline(SpawnBricksPipeline, self)
-
-	# Wire restart button — HUD is pure layout, Main handles control flow
-	var btn = get_tree().get_first_node_in_group("restart_button")
-	if btn:
-		btn.pressed.connect(get_tree().reload_current_scene)

@@ -1,14 +1,28 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://7wkglgdgom46"]
 
-[node name="HUD" type="CanvasLayer"]
+[ext_resource type="Script" uid="uid://craec7wkodtlh" path="res://addons/deus/classes/nodes/DeusConfiguration.gd" id="1_deus_cfg"]
+[ext_resource type="Script" uid="uid://biw68jxxfy2mg" path="res://addons/deus/classes/resources/SignalToPipelineConfig.gd" id="2_sig_cfg"]
+[ext_resource type="Script" uid="uid://dq3e32uh8p8ug" path="res://classes/pipelines/RestartPipeline.gd" id="3_restart"]
 
-[node name="Root" type="Control" parent="."]
-layout_mode = 1
+[sub_resource type="Resource" id="Resource_restart_pipeline"]
+script = ExtResource("3_restart")
+
+[sub_resource type="Resource" id="Resource_sig_pressed"]
+script = ExtResource("2_sig_cfg")
+signal_name = "pressed"
+pipeline = SubResource("Resource_restart_pipeline")
+
+[node name="HUD" type="CanvasLayer" unique_id=606421690]
+
+[node name="Root" type="Control" parent="." unique_id=1880649923]
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="ScoreLabel" type="Label" parent="Root" groups=["hud_score"]]
+[node name="ScoreLabel" type="Label" parent="Root" unique_id=105821344 groups=["hud_score"]]
 layout_mode = 1
 offset_left = 10.0
 offset_top = 10.0
@@ -17,7 +31,7 @@ offset_bottom = 40.0
 theme_override_font_sizes/font_size = 24
 text = "Score: 0"
 
-[node name="LivesLabel" type="Label" parent="Root" groups=["hud_lives"]]
+[node name="LivesLabel" type="Label" parent="Root" unique_id=809007888 groups=["hud_lives"]]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -26,11 +40,12 @@ offset_left = -130.0
 offset_top = 10.0
 offset_right = -10.0
 offset_bottom = 40.0
+grow_horizontal = 0
 theme_override_font_sizes/font_size = 24
 text = "Lives: 3"
 horizontal_alignment = 2
 
-[node name="GameOverlay" type="PanelContainer" parent="Root" groups=["game_overlay"]]
+[node name="GameOverlay" type="PanelContainer" parent="Root" unique_id=371000910 groups=["game_overlay"]]
 visible = false
 layout_mode = 1
 anchors_preset = 8
@@ -42,30 +57,36 @@ offset_left = -150.0
 offset_top = -80.0
 offset_right = 150.0
 offset_bottom = 80.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="VBox" type="VBoxContainer" parent="Root/GameOverlay"]
+[node name="VBox" type="VBoxContainer" parent="Root/GameOverlay" unique_id=227992037]
 layout_mode = 2
 alignment = 1
 
-[node name="Title" type="Label" parent="Root/GameOverlay/VBox" groups=["overlay_title"]]
+[node name="Title" type="Label" parent="Root/GameOverlay/VBox" unique_id=1450095839 groups=["overlay_title"]]
 layout_mode = 2
 theme_override_font_sizes/font_size = 36
 horizontal_alignment = 1
 
-[node name="FinalScore" type="Label" parent="Root/GameOverlay/VBox" groups=["overlay_score"]]
+[node name="FinalScore" type="Label" parent="Root/GameOverlay/VBox" unique_id=772036901 groups=["overlay_score"]]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 horizontal_alignment = 1
 
-[node name="Spacer" type="Control" parent="Root/GameOverlay/VBox"]
+[node name="Spacer" type="Control" parent="Root/GameOverlay/VBox" unique_id=1733352654]
 custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
 
-[node name="RestartButton" type="Button" parent="Root/GameOverlay/VBox" groups=["restart_button"]]
+[node name="RestartButton" type="Button" parent="Root/GameOverlay/VBox" unique_id=705931743 groups=["restart_button"]]
 layout_mode = 2
 text = "Play Again"
 
-[node name="PauseOverlay" type="Label" parent="Root" groups=["pause_overlay"]]
+[node name="DeusConfiguration" type="Node" parent="Root/GameOverlay/VBox/RestartButton" unique_id=673827082]
+script = ExtResource("1_deus_cfg")
+signals_to_pipelines = Array[ExtResource("2_sig_cfg")]([SubResource("Resource_sig_pressed")])
+
+[node name="PauseOverlay" type="Label" parent="Root" unique_id=1947071531 groups=["pause_overlay"]]
 visible = false
 layout_mode = 1
 anchors_preset = 8
@@ -77,6 +98,8 @@ offset_left = -100.0
 offset_top = -30.0
 offset_right = 100.0
 offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_font_sizes/font_size = 48
 text = "PAUSED"
 horizontal_alignment = 1
