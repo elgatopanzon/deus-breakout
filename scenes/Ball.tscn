@@ -19,7 +19,7 @@ component = SubResource("Resource_pos")
 
 [sub_resource type="Resource" id="Resource_size"]
 script = ExtResource("4_size")
-value = Vector2(16, 16)
+value = Vector2(24, 24)
 
 [sub_resource type="Resource" id="Resource_size_cfg"]
 script = ExtResource("2_comp_cfg")
@@ -53,19 +53,19 @@ pipeline = SubResource("Resource_deflect_pipeline")
 execution_node_id = "ball"
 
 [sub_resource type="CircleShape2D" id="CircleShape_ball"]
-radius = 8.0
+radius = 12.0
 
 [node name="Ball" type="Area2D"]
 position = Vector2(572, 600)
 
 [node name="Visual" type="ColorRect" parent="."]
-offset_right = 16.0
-offset_bottom = 16.0
+offset_right = 24.0
+offset_bottom = 24.0
 color = Color(1, 1, 1, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape_ball")
-position = Vector2(8, 8)
+position = Vector2(12, 12)
 
 [node name="DeusConfiguration" type="Node" parent="."]
 script = ExtResource("1_deus_cfg")
