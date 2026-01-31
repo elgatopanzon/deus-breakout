@@ -38,13 +38,21 @@ script = ExtResource("6_intent")
 script = ExtResource("2_comp_cfg")
 component = SubResource("Resource_intent")
 
-[node name="Paddle" type="ColorRect" unique_id=540223566]
-offset_left = 516.0
-offset_top = 620.0
-offset_right = 636.0
-offset_bottom = 640.0
+[sub_resource type="RectangleShape2D" id="RectShape_paddle"]
+size = Vector2(120, 20)
 
-[node name="DeusConfiguration" type="Node" parent="." unique_id=1889661370]
+[node name="Paddle" type="Area2D"]
+position = Vector2(516, 620)
+
+[node name="Visual" type="ColorRect" parent="."]
+offset_right = 120.0
+offset_bottom = 20.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectShape_paddle")
+position = Vector2(60, 10)
+
+[node name="DeusConfiguration" type="Node" parent="."]
 script = ExtResource("1_deus_cfg")
 node_id = "paddle"
 components = Array[ExtResource("2_comp_cfg")]([SubResource("Resource_pos_cfg"), SubResource("Resource_size_cfg"), SubResource("Resource_speed_cfg"), SubResource("Resource_intent_cfg")])

@@ -2,8 +2,11 @@
 
 [ext_resource type="Script" uid="uid://dnlsimj7gybn6" path="res://scenes/Main.gd" id="1_main"]
 [ext_resource type="PackedScene" uid="uid://cdujo7up8d5m0" path="res://scenes/Paddle.tscn" id="2_paddle"]
+[ext_resource type="PackedScene" path="res://scenes/Ball.tscn" id="3_ball"]
 
 [node name="Main" type="Node2D" unique_id=511625991]
 script = ExtResource("1_main")
 
 [node name="Paddle" parent="." unique_id=1312555127 instance=ExtResource("2_paddle")]
+
+[node name="Ball" parent="." unique_id=1595315360 instance=ExtResource("3_ball")]

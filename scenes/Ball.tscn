@@ -1,0 +1,64 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://craec7wkodtlh" path="res://addons/deus/classes/nodes/DeusConfiguration.gd" id="1_deus_cfg"]
+[ext_resource type="Script" uid="uid://r24q5d5lsjcl" path="res://addons/deus/classes/resources/ComponentConfig.gd" id="2_comp_cfg"]
+[ext_resource type="Script" uid="uid://ckrgeyrpt0sap" path="res://classes/components/Position.gd" id="3_pos"]
+[ext_resource type="Script" uid="uid://biuv6l7nx084l" path="res://classes/components/Size.gd" id="4_size"]
+[ext_resource type="Script" path="res://classes/components/Velocity.gd" id="5_vel"]
+[ext_resource type="Script" uid="uid://biw68jxxfy2mg" path="res://addons/deus/classes/resources/SignalToPipelineConfig.gd" id="6_sig_cfg"]
+[ext_resource type="Script" path="res://classes/pipelines/BallCollisionPipeline.gd" id="7_collision"]
+
+[sub_resource type="Resource" id="Resource_pos"]
+script = ExtResource("3_pos")
+value = Vector2(572, 600)
+
+[sub_resource type="Resource" id="Resource_pos_cfg"]
+script = ExtResource("2_comp_cfg")
+component = SubResource("Resource_pos")
+
+[sub_resource type="Resource" id="Resource_size"]
+script = ExtResource("4_size")
+value = Vector2(12, 12)
+
+[sub_resource type="Resource" id="Resource_size_cfg"]
+script = ExtResource("2_comp_cfg")
+component = SubResource("Resource_size")
+
+[sub_resource type="Resource" id="Resource_vel"]
+script = ExtResource("5_vel")
+direction = Vector2(0.7071, -0.7071)
+speed = 400.0
+
+[sub_resource type="Resource" id="Resource_vel_cfg"]
+script = ExtResource("2_comp_cfg")
+component = SubResource("Resource_vel")
+
+[sub_resource type="Resource" id="Resource_collision_pipeline"]
+script = ExtResource("7_collision")
+
+[sub_resource type="Resource" id="Resource_sig_area_entered"]
+script = ExtResource("6_sig_cfg")
+signal_name = "area_entered"
+pipeline = SubResource("Resource_collision_pipeline")
+execution_node_id = "ball"
+
+[sub_resource type="CircleShape2D" id="CircleShape_ball"]
+radius = 6.0
+
+[node name="Ball" type="Area2D"]
+position = Vector2(572, 600)
+
+[node name="Visual" type="ColorRect" parent="."]
+offset_right = 12.0
+offset_bottom = 12.0
+color = Color(1, 1, 1, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape_ball")
+position = Vector2(6, 6)
+
+[node name="DeusConfiguration" type="Node" parent="."]
+script = ExtResource("1_deus_cfg")
+node_id = "ball"
+components = Array[ExtResource("2_comp_cfg")]([SubResource("Resource_pos_cfg"), SubResource("Resource_size_cfg"), SubResource("Resource_vel_cfg")])
+signals_to_pipelines = Array[ExtResource("6_sig_cfg")]([SubResource("Resource_sig_area_entered")])

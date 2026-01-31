@@ -10,7 +10,7 @@
 extends Node2D
 
 func _ready():
-	for pipeline in [PaddleInputPipeline, MovementPipeline, PositionClampPipeline]:
+	for pipeline in [PaddleInputPipeline, MovementPipeline, PositionClampPipeline, BallMovementPipeline, WallReflectionPipeline]:
 		Deus.register_pipeline(pipeline)
 		Deus.pipeline_scheduler.register_task(
 			PipelineSchedulerDefaults.OnUpdate, pipeline
