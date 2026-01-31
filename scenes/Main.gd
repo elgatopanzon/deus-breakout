@@ -24,7 +24,7 @@ func _ready():
 			Deus.component_registry.node_components.erase(node)
 
 	# Scheduled pipelines (run every frame)
-	for pipeline in [PaddleInputPipeline, MovementPipeline, PositionClampPipeline, BallMovementPipeline, WallReflectionPipeline, DamagePipeline, DestructionPipeline, BrickVisualSyncPipeline, BallMissedPipeline, PausePipeline]:
+	for pipeline in [PaddleInputPipeline, MovementPipeline, PositionClampPipeline, BallMovementPipeline, WallReflectionPipeline, DamagePipeline, DestructionPipeline, BrickVisualSyncPipeline, BallMissedPipeline, PausePipeline, HUDSyncPipeline]:
 		Deus.register_pipeline(pipeline)
 		Deus.pipeline_scheduler.register_task(
 			PipelineSchedulerDefaults.OnUpdate, pipeline
@@ -52,6 +52,30 @@ func _ready():
 	Deus.set_component(Deus, GameState, GameState.new())
 
 	_spawn_bricks()
+	_create_hud()
+
+func _create_hud():
+	var canvas = CanvasLayer.new()
+	canvas.name = "HUD"
+	add_child(canvas)
+
+	var vp_width = get_viewport_rect().size.x
+
+	var score_label = Label.new()
+	score_label.name = "ScoreLabel"
+	score_label.position = Vector2(10, 10)
+	score_label.text = "Score: 0"
+	score_label.add_theme_font_size_override("font_size", 24)
+	score_label.add_to_group("hud_score")
+	canvas.add_child(score_label)
+
+	var lives_label = Label.new()
+	lives_label.name = "LivesLabel"
+	lives_label.position = Vector2(vp_width - 130, 10)
+	lives_label.text = "Lives: 3"
+	lives_label.add_theme_font_size_override("font_size", 24)
+	lives_label.add_to_group("hud_lives")
+	canvas.add_child(lives_label)
 
 func _spawn_bricks():
 	# HP per row — top rows are tougher (classic breakout pattern)
