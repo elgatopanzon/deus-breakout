@@ -19,7 +19,7 @@ const BRICK_TOP_MARGIN = 60.0
 
 func _ready():
 	# Scheduled pipelines (run every frame)
-	for pipeline in [PaddleInputPipeline, MovementPipeline, PositionClampPipeline, BallMovementPipeline, WallReflectionPipeline, DamagePipeline, BrickVisualSyncPipeline]:
+	for pipeline in [PaddleInputPipeline, MovementPipeline, PositionClampPipeline, BallMovementPipeline, WallReflectionPipeline, DamagePipeline, DestructionPipeline, BrickVisualSyncPipeline, BallMissedPipeline]:
 		Deus.register_pipeline(pipeline)
 		Deus.pipeline_scheduler.register_task(
 			PipelineSchedulerDefaults.OnUpdate, pipeline
@@ -27,6 +27,17 @@ func _ready():
 
 	# Signal-only pipelines (not scheduled)
 	Deus.register_pipeline(BallDamagePipeline)
+
+	# Scoring injects before destruction — components still available
+	Deus.inject_pipeline(ScoringPipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
+
+	# Lives + respawn inject into ball-missed detection pipeline
+	Deus.inject_pipeline(LivesDecrementPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
+	Deus.inject_pipeline(BallRespawnPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
+
+	# Game state singletons on world node
+	Deus.set_component(Deus, Score, Score.new())
+	Deus.set_component(Deus, Lives, Lives.new())
 
 	_spawn_bricks()
 
@@ -52,6 +63,9 @@ func _spawn_bricks():
 			var health = Health.new()
 			health.value = hp
 			Deus.set_component(brick, Health, health)
+
+			# Point value for scoring (10 per HP tier)
+			brick.set_meta("points", hp * 10)
 
 			# Set initial color from health
 			brick.get_node("Visual").color = BrickVisualSyncPipeline.color_for_health(hp)

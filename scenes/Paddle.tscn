@@ -10,7 +10,7 @@
 
 [sub_resource type="Resource" id="Resource_pos"]
 script = ExtResource("3_pos")
-value = Vector2(516, 620)
+value = Vector2(516, 580)
 
 [sub_resource type="Resource" id="Resource_pos_cfg"]
 script = ExtResource("2_comp_cfg")
@@ -51,7 +51,7 @@ component = SubResource("Resource_deflector")
 size = Vector2(120, 20)
 
 [node name="Paddle" type="Area2D"]
-position = Vector2(516, 620)
+position = Vector2(516, 580)
 
 [node name="Visual" type="ColorRect" parent="."]
 offset_right = 120.0

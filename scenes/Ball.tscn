@@ -11,7 +11,7 @@
 
 [sub_resource type="Resource" id="Resource_pos"]
 script = ExtResource("3_pos")
-value = Vector2(572, 600)
+value = Vector2(572, 556)
 
 [sub_resource type="Resource" id="Resource_pos_cfg"]
 script = ExtResource("2_comp_cfg")
@@ -56,7 +56,7 @@ execution_node_id = "ball"
 radius = 12.0
 
 [node name="Ball" type="Area2D"]
-position = Vector2(572, 600)
+position = Vector2(572, 556)
 
 [node name="Visual" type="ColorRect" parent="."]
 offset_right = 24.0
