@@ -31,9 +31,6 @@ func _ready():
 			PipelineSchedulerDefaults.OnUpdate, pipeline
 		)
 
-	# Signal-only pipelines (not scheduled)
-	Deus.register_pipeline(BallDamagePipeline)
-
 	# Pause guard injects before gameplay pipelines — cancels when not playing
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(PaddleInputPipeline, "_stage_read_input"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(BallMovementPipeline, "_stage_move"), true)
@@ -48,6 +45,9 @@ func _ready():
 	Deus.inject_pipeline(LivesDecrementPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
 	Deus.inject_pipeline(GameOverPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
 	Deus.inject_pipeline(BallRespawnPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
+
+	# Damage accumulation injects into brick collision detection
+	Deus.inject_pipeline(BallDamagePipeline, Callable(BrickCollisionPipeline, "_stage_collide"), false)
 
 	# Game state singletons on world node
 	Deus.set_component(Deus, Score, Score.new())
@@ -92,5 +92,3 @@ func _spawn_bricks():
 
 			# Set initial color from health
 			brick.get_node("Visual").color = BrickVisualSyncPipeline.color_for_health(hp)
-
-			Deus.signal_to_pipeline(brick, "area_entered", brick, BallDamagePipeline)

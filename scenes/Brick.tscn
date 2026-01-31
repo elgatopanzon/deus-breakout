@@ -5,6 +5,8 @@
 [ext_resource type="Script" path="res://classes/components/Health.gd" id="3_health"]
 [ext_resource type="Script" path="res://classes/components/Damage.gd" id="4_damage"]
 [ext_resource type="Script" uid="uid://biuv6l7nx084l" path="res://classes/components/Size.gd" id="5_size"]
+[ext_resource type="Script" uid="uid://biw68jxxfy2mg" path="res://addons/deus/classes/resources/SignalToPipelineConfig.gd" id="6_sig_cfg"]
+[ext_resource type="Script" path="res://classes/pipelines/BrickCollisionPipeline.gd" id="7_collision"]
 
 [sub_resource type="Resource" id="Resource_health"]
 script = ExtResource("3_health")
@@ -30,6 +32,15 @@ value = Vector2(50, 20)
 script = ExtResource("2_comp_cfg")
 component = SubResource("Resource_size")
 
+[sub_resource type="Resource" id="Resource_collision_pipeline"]
+script = ExtResource("7_collision")
+
+[sub_resource type="Resource" id="Resource_sig_area_entered"]
+script = ExtResource("6_sig_cfg")
+signal_name = "area_entered"
+pipeline = SubResource("Resource_collision_pipeline")
+execution_node_path = NodePath(".")
+
 [sub_resource type="RectangleShape2D" id="RectShape_brick"]
 size = Vector2(50, 20)
 
@@ -48,3 +59,4 @@ position = Vector2(25, 10)
 script = ExtResource("1_deus_cfg")
 node_id = "brick"
 components = Array[ExtResource("2_comp_cfg")]([SubResource("Resource_health_cfg"), SubResource("Resource_damage_cfg"), SubResource("Resource_size_cfg")])
+signals_to_pipelines = Array[ExtResource("6_sig_cfg")]([SubResource("Resource_sig_area_entered")])
