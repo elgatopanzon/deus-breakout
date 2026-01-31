@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://biuv6l7nx084l" path="res://classes/components/Size.gd" id="4_size"]
 [ext_resource type="Script" uid="uid://7bijtgh7w0gc" path="res://classes/components/Speed.gd" id="5_speed"]
 [ext_resource type="Script" uid="uid://c5gbsllh0e454" path="res://classes/components/InputIntent.gd" id="6_intent"]
+[ext_resource type="Script" path="res://classes/components/Deflector.gd" id="7_deflector"]
 
 [sub_resource type="Resource" id="Resource_pos"]
 script = ExtResource("3_pos")
@@ -38,6 +39,14 @@ script = ExtResource("6_intent")
 script = ExtResource("2_comp_cfg")
 component = SubResource("Resource_intent")
 
+[sub_resource type="Resource" id="Resource_deflector"]
+script = ExtResource("7_deflector")
+max_angle_degrees = 60.0
+
+[sub_resource type="Resource" id="Resource_deflector_cfg"]
+script = ExtResource("2_comp_cfg")
+component = SubResource("Resource_deflector")
+
 [sub_resource type="RectangleShape2D" id="RectShape_paddle"]
 size = Vector2(120, 20)
 
@@ -55,4 +64,4 @@ position = Vector2(60, 10)
 [node name="DeusConfiguration" type="Node" parent="."]
 script = ExtResource("1_deus_cfg")
 node_id = "paddle"
-components = Array[ExtResource("2_comp_cfg")]([SubResource("Resource_pos_cfg"), SubResource("Resource_size_cfg"), SubResource("Resource_speed_cfg"), SubResource("Resource_intent_cfg")])
+components = Array[ExtResource("2_comp_cfg")]([SubResource("Resource_pos_cfg"), SubResource("Resource_size_cfg"), SubResource("Resource_speed_cfg"), SubResource("Resource_intent_cfg"), SubResource("Resource_deflector_cfg")])
