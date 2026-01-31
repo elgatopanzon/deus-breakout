@@ -9,8 +9,6 @@
 
 extends Node2D
 
-const HUDScene = preload("res://scenes/HUD.tscn")
-
 func _ready():
 	# Purge stale component entries from previous scene load (Deus autoload persists across reloads)
 	for node in Deus.component_registry.node_components.keys().duplicate():
@@ -50,9 +48,6 @@ func _ready():
 	# Spawn brick grid
 	Deus.register_pipeline(SpawnBricksPipeline)
 	Deus.execute_pipeline(SpawnBricksPipeline, self)
-
-	var hud = HUDScene.instantiate()
-	add_child(hud)
 
 	# Wire restart button — HUD is pure layout, Main handles control flow
 	var btn = get_tree().get_first_node_in_group("restart_button")
