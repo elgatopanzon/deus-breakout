@@ -18,6 +18,11 @@ const BRICK_GAP = 8.0
 const BRICK_TOP_MARGIN = 60.0
 
 func _ready():
+	# Purge stale component entries from previous scene load (Deus autoload persists across reloads)
+	for node in Deus.component_registry.node_components.keys().duplicate():
+		if not is_instance_valid(node):
+			Deus.component_registry.node_components.erase(node)
+
 	# Scheduled pipelines (run every frame)
 	for pipeline in [PaddleInputPipeline, MovementPipeline, PositionClampPipeline, BallMovementPipeline, WallReflectionPipeline, DamagePipeline, DestructionPipeline, BrickVisualSyncPipeline, BallMissedPipeline]:
 		Deus.register_pipeline(pipeline)
@@ -28,11 +33,13 @@ func _ready():
 	# Signal-only pipelines (not scheduled)
 	Deus.register_pipeline(BallDamagePipeline)
 
-	# Scoring injects before destruction — components still available
+	# Scoring + win check inject before destruction — components still available
 	Deus.inject_pipeline(ScoringPipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
+	Deus.inject_pipeline(WinCheckPipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
 
-	# Lives + respawn inject into ball-missed detection pipeline
+	# Lives + game over + respawn inject into ball-missed detection pipeline
 	Deus.inject_pipeline(LivesDecrementPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
+	Deus.inject_pipeline(GameOverPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
 	Deus.inject_pipeline(BallRespawnPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
 
 	# Game state singletons on world node
