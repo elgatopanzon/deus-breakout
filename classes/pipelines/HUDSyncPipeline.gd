@@ -6,8 +6,10 @@ class_name HUDSyncPipeline extends DefaultPipeline
 static func _requires(): return [Score]
 
 static func _stage_sync(context):
-	var score = context.Score
+	var score = context.world.get_component(context.world, Score)
 	var lives = context.world.get_component(context.world, Lives)
+	if score == null or lives == null:
+		return
 
 	var score_label = context._node.get_tree().get_first_node_in_group("hud_score")
 	if score_label:
