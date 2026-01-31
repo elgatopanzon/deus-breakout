@@ -9,14 +9,7 @@
 
 extends Node2D
 
-const BrickScene = preload("res://scenes/Brick.tscn")
 const HUDScene = preload("res://scenes/HUD.tscn")
-
-const BRICK_COLS = 8
-const BRICK_ROWS = 5
-const BRICK_SIZE = Vector2(50, 20)
-const BRICK_GAP = 8.0
-const BRICK_TOP_MARGIN = 60.0
 
 func _ready():
 	# Purge stale component entries from previous scene load (Deus autoload persists across reloads)
@@ -54,7 +47,9 @@ func _ready():
 	Deus.set_component(Deus, Lives, Lives.new())
 	Deus.set_component(Deus, GameState, GameState.new())
 
-	_spawn_bricks()
+	# Spawn brick grid
+	Deus.register_pipeline(SpawnBricksPipeline)
+	Deus.execute_pipeline(SpawnBricksPipeline, self)
 
 	var hud = HUDScene.instantiate()
 	add_child(hud)
@@ -63,32 +58,3 @@ func _ready():
 	var btn = get_tree().get_first_node_in_group("restart_button")
 	if btn:
 		btn.pressed.connect(get_tree().reload_current_scene)
-
-func _spawn_bricks():
-	# HP per row — top rows are tougher (classic breakout pattern)
-	var row_health = [3, 3, 2, 2, 1]
-
-	var vp_width = get_viewport_rect().size.x
-	var grid_width = BRICK_COLS * BRICK_SIZE.x + (BRICK_COLS - 1) * BRICK_GAP
-	var x_offset = (vp_width - grid_width) * 0.5
-
-	for row in range(BRICK_ROWS):
-		var hp = row_health[row]
-		for col in range(BRICK_COLS):
-			var brick = BrickScene.instantiate()
-			brick.position = Vector2(
-				x_offset + col * (BRICK_SIZE.x + BRICK_GAP),
-				BRICK_TOP_MARGIN + row * (BRICK_SIZE.y + BRICK_GAP)
-			)
-			add_child(brick)
-
-			# Override default health for this row's tier
-			var health = Health.new()
-			health.value = hp
-			Deus.set_component(brick, Health, health)
-
-			# Point value for scoring (10 per HP tier)
-			brick.set_meta("points", hp * 10)
-
-			# Set initial color from health
-			brick.get_node("Visual").color = BrickVisualSyncPipeline.color_for_health(hp)
