@@ -82,12 +82,17 @@ No code needed to set up an entity. DeusConfiguration attaches components in `_e
 
 ```gdscript
 # Scheduled pipelines (run every frame)
-for pipeline in [PaddleInputPipeline, MovementPipeline, PositionClampPipeline,
+for pipeline in [TouchZoneInputPipeline, PaddleInputPipeline,
+    TouchPaddleInputPipeline, MovementPipeline, PositionClampPipeline,
     BallMovementPipeline, WallReflectionPipeline, DamagePipeline,
     DestructionPipeline, BrickVisualSyncPipeline, BallMissedPipeline,
     PausePipeline, HUDSyncPipeline, OverlaySyncPipeline]:
     Deus.register_pipeline(pipeline)
     Deus.pipeline_scheduler.register_task(PipelineSchedulerDefaults.OnUpdate, pipeline)
+
+# Pause guard injects before gameplay pipelines — cancels when not playing
+Deus.inject_pipeline(PauseGuardPipeline, Callable(TouchZoneInputPipeline, "_stage_detect_touch"), true)
+Deus.inject_pipeline(PauseGuardPipeline, Callable(TouchPaddleInputPipeline, "_stage_read_touch"), true)
 
 # Scoring injects before destruction so components are still readable
 Deus.inject_pipeline(ScoringPipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
@@ -107,12 +112,13 @@ classes/
   components/    # Data containers (Health, Velocity, Position, Score, Lives, ...)
   pipelines/     # Systems (DamagePipeline, BallMovementPipeline, HUDSyncPipeline, ...)
 scenes/
-  Main.tscn      # Root scene with Paddle, Ball, HUD as children
-  Main.gd        # Bootstrap: pipeline registration and injection
-  Ball.tscn      # Ball entity with DeusConfiguration
-  Brick.tscn     # Brick entity template with DeusConfiguration
-  Paddle.tscn    # Paddle entity with DeusConfiguration
-  HUD.tscn       # UI layer with DeusConfiguration on each element
+  Main.tscn          # Root scene with Paddle, Ball, HUD, TouchControls
+  Main.gd            # Bootstrap: pipeline registration and injection
+  Ball.tscn          # Ball entity with DeusConfiguration
+  Brick.tscn         # Brick entity template with DeusConfiguration
+  Paddle.tscn        # Paddle entity with DeusConfiguration
+  HUD.tscn           # UI layer with DeusConfiguration on each element
+  TouchControls.tscn # Invisible left/right touch zones for Android
 addons/deus/     # Godot Deus ECS framework
 ```
 
@@ -123,7 +129,7 @@ addons/deus/     # Godot Deus ECS framework
 | Engine | Godot 4.6 |
 | Language | GDScript |
 | Framework | [Godot Deus](https://github.com/elgatopanzon/deus) ECS plugin |
-| Targets | Desktop (Linux, Windows, macOS), Web (HTML5) |
+| Targets | Desktop (Linux, Windows, macOS), Android, Web (HTML5) |
 
 ## Roadmap
 
@@ -136,6 +142,7 @@ addons/deus/     # Godot Deus ECS framework
 - [x] Basic UI
 
 ### Phase 2: Game Feel & Polish
+- [x] Android touch controls
 - [ ] Visual effects and screen shake on brick destruction
 - [ ] Particle effects for ball impacts and brick breaks
 - [ ] Sound design (paddle hit, brick break, wall bounce, game over)
@@ -150,6 +157,7 @@ addons/deus/     # Godot Deus ECS framework
 
 ## Completed Work
 
+- **2026-01-31** - Android touch controls
 - **2026-01-31** - Basic UI
 - **2026-01-31** - Win/lose conditions
 - **2026-01-31** - Score and lives tracking
