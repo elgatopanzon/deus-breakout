@@ -2,6 +2,8 @@
 
 > Classic Breakout clone built entirely with the [Godot Deus](https://github.com/elgatopanzon/deus) ECS plugin - every mechanic runs through components and pipelines, no node scripts.
 
+![Screenshot](screenshot.png)
+
 ## Quick Start
 
 1. Clone the repo (including the Deus addon):
