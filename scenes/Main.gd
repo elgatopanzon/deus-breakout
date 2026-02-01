@@ -16,13 +16,15 @@ func _ready():
 			Deus.component_registry.node_components.erase(node)
 
 	# Scheduled pipelines (run every frame)
-	for pipeline in [PaddleInputPipeline, MovementPipeline, PositionClampPipeline, BallMovementPipeline, WallReflectionPipeline, DamagePipeline, DestructionPipeline, BrickVisualSyncPipeline, BallMissedPipeline, PausePipeline, HUDSyncPipeline, OverlaySyncPipeline]:
+	for pipeline in [TouchZoneInputPipeline, PaddleInputPipeline, TouchPaddleInputPipeline, MovementPipeline, PositionClampPipeline, BallMovementPipeline, WallReflectionPipeline, DamagePipeline, DestructionPipeline, BrickVisualSyncPipeline, BallMissedPipeline, PausePipeline, HUDSyncPipeline, OverlaySyncPipeline]:
 		Deus.register_pipeline(pipeline)
 		Deus.pipeline_scheduler.register_task(
 			PipelineSchedulerDefaults.OnUpdate, pipeline
 		)
 
 	# Pause guard injects before gameplay pipelines — cancels when not playing
+	Deus.inject_pipeline(PauseGuardPipeline, Callable(TouchZoneInputPipeline, "_stage_detect_touch"), true)
+	Deus.inject_pipeline(PauseGuardPipeline, Callable(TouchPaddleInputPipeline, "_stage_read_touch"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(PaddleInputPipeline, "_stage_read_input"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(BallMovementPipeline, "_stage_move"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(WallReflectionPipeline, "_stage_reflect"), true)

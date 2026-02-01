@@ -1,0 +1,53 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://craec7wkodtlh" path="res://addons/deus/classes/nodes/DeusConfiguration.gd" id="1_deus_cfg"]
+[ext_resource type="Script" uid="uid://r24q5d5lsjcl" path="res://addons/deus/classes/resources/ComponentConfig.gd" id="2_comp_cfg"]
+[ext_resource type="Script" path="res://classes/components/TouchZone.gd" id="3_tz"]
+
+[sub_resource type="Resource" id="Resource_tz_left"]
+script = ExtResource("3_tz")
+direction = -1.0
+
+[sub_resource type="Resource" id="Resource_tz_left_cfg"]
+script = ExtResource("2_comp_cfg")
+component = SubResource("Resource_tz_left")
+
+[sub_resource type="Resource" id="Resource_tz_right"]
+script = ExtResource("3_tz")
+direction = 1.0
+
+[sub_resource type="Resource" id="Resource_tz_right_cfg"]
+script = ExtResource("2_comp_cfg")
+component = SubResource("Resource_tz_right")
+
+[node name="TouchControls" type="CanvasLayer"]
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TouchLeft" type="Control" parent="Root"]
+layout_mode = 1
+anchor_right = 0.5
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="DeusConfiguration" type="Node" parent="Root/TouchLeft"]
+script = ExtResource("1_deus_cfg")
+components = Array[ExtResource("2_comp_cfg")]([SubResource("Resource_tz_left_cfg")])
+
+[node name="TouchRight" type="Control" parent="Root"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="DeusConfiguration" type="Node" parent="Root/TouchRight"]
+script = ExtResource("1_deus_cfg")
+components = Array[ExtResource("2_comp_cfg")]([SubResource("Resource_tz_right_cfg")])

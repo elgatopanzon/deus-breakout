@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://cdujo7up8d5m0" path="res://scenes/Paddle.tscn" id="2_paddle"]
 [ext_resource type="PackedScene" path="res://scenes/Ball.tscn" id="3_ball"]
 [ext_resource type="PackedScene" uid="uid://7wkglgdgom46" path="res://scenes/HUD.tscn" id="4_hud"]
+[ext_resource type="PackedScene" path="res://scenes/TouchControls.tscn" id="5_touch"]
 
 [node name="Main" type="Node2D" unique_id=511625991]
 script = ExtResource("1_main")
@@ -13,3 +14,5 @@ script = ExtResource("1_main")
 [node name="Ball" parent="." unique_id=1595315360 instance=ExtResource("3_ball")]
 
 [node name="HUD" parent="." unique_id=1343528118 instance=ExtResource("4_hud")]
+
+[node name="TouchControls" parent="." unique_id=1264324424 instance=ExtResource("5_touch")]
