@@ -7,15 +7,14 @@ static func _requires(): return [GameState]
 
 static func _stage_sync(context):
 	var state = context.GameState.state
-	var tree = context._node.get_tree()
 
-	var game_overlay = tree.get_first_node_in_group("game_overlay")
-	var pause_overlay = tree.get_first_node_in_group("pause_overlay")
+	var game_overlay = context.world.try_get_node("game_overlay")
+	var pause_overlay = context.world.try_get_node("pause_overlay")
 	if game_overlay == null or pause_overlay == null:
 		return
 
-	var title_label = tree.get_first_node_in_group("overlay_title")
-	var score_label = tree.get_first_node_in_group("overlay_score")
+	var title_label = context.world.try_get_node("overlay_title")
+	var score_label = context.world.try_get_node("overlay_score")
 
 	match state:
 		GameState.State.PLAYING:

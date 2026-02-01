@@ -11,10 +11,10 @@ static func _stage_sync(context):
 	if score == null or lives == null:
 		return
 
-	var score_label = context._node.get_tree().get_first_node_in_group("hud_score")
+	var score_label = context.world.try_get_node("hud_score")
 	if score_label:
 		score_label.text = "Score: %d" % score.value
 
-	var lives_label = context._node.get_tree().get_first_node_in_group("hud_lives")
+	var lives_label = context.world.try_get_node("hud_lives")
 	if lives_label:
 		lives_label.text = "Lives: %d" % lives.value

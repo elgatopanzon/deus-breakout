@@ -31,6 +31,10 @@ offset_bottom = 40.0
 theme_override_font_sizes/font_size = 24
 text = "Score: 0"
 
+[node name="DeusConfiguration" type="Node" parent="Root/ScoreLabel"]
+script = ExtResource("1_deus_cfg")
+node_id = "hud_score"
+
 [node name="LivesLabel" type="Label" parent="Root" unique_id=809007888 groups=["hud_lives"]]
 layout_mode = 1
 anchors_preset = 1
@@ -44,6 +48,10 @@ grow_horizontal = 0
 theme_override_font_sizes/font_size = 24
 text = "Lives: 3"
 horizontal_alignment = 2
+
+[node name="DeusConfiguration" type="Node" parent="Root/LivesLabel"]
+script = ExtResource("1_deus_cfg")
+node_id = "hud_lives"
 
 [node name="GameOverlay" type="PanelContainer" parent="Root" unique_id=371000910 groups=["game_overlay"]]
 visible = false
@@ -60,6 +68,10 @@ offset_bottom = 80.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="DeusConfiguration" type="Node" parent="Root/GameOverlay"]
+script = ExtResource("1_deus_cfg")
+node_id = "game_overlay"
+
 [node name="VBox" type="VBoxContainer" parent="Root/GameOverlay" unique_id=227992037]
 layout_mode = 2
 alignment = 1
@@ -69,10 +81,18 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 36
 horizontal_alignment = 1
 
+[node name="DeusConfiguration" type="Node" parent="Root/GameOverlay/VBox/Title"]
+script = ExtResource("1_deus_cfg")
+node_id = "overlay_title"
+
 [node name="FinalScore" type="Label" parent="Root/GameOverlay/VBox" unique_id=772036901 groups=["overlay_score"]]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 horizontal_alignment = 1
+
+[node name="DeusConfiguration" type="Node" parent="Root/GameOverlay/VBox/FinalScore"]
+script = ExtResource("1_deus_cfg")
+node_id = "overlay_score"
 
 [node name="Spacer" type="Control" parent="Root/GameOverlay/VBox" unique_id=1733352654]
 custom_minimum_size = Vector2(0, 10)
@@ -104,3 +124,7 @@ theme_override_font_sizes/font_size = 48
 text = "PAUSED"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="DeusConfiguration" type="Node" parent="Root/PauseOverlay"]
+script = ExtResource("1_deus_cfg")
+node_id = "pause_overlay"
