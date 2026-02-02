@@ -3,14 +3,23 @@
 [ext_resource type="Script" uid="uid://craec7wkodtlh" path="res://addons/deus/classes/nodes/DeusConfiguration.gd" id="1_deus_cfg"]
 [ext_resource type="Script" uid="uid://biw68jxxfy2mg" path="res://addons/deus/classes/resources/SignalToPipelineConfig.gd" id="2_sig_cfg"]
 [ext_resource type="Script" uid="uid://dq3e32uh8p8ug" path="res://classes/pipelines/RestartPipeline.gd" id="3_restart"]
+[ext_resource type="Script" path="res://classes/pipelines/UIClickSoundPipeline.gd" id="4_ui_click"]
 
 [sub_resource type="Resource" id="Resource_restart_pipeline"]
 script = ExtResource("3_restart")
+
+[sub_resource type="Resource" id="Resource_ui_click_pipeline"]
+script = ExtResource("4_ui_click")
 
 [sub_resource type="Resource" id="Resource_sig_pressed"]
 script = ExtResource("2_sig_cfg")
 signal_name = "pressed"
 pipeline = SubResource("Resource_restart_pipeline")
+
+[sub_resource type="Resource" id="Resource_sig_pressed_click"]
+script = ExtResource("2_sig_cfg")
+signal_name = "pressed"
+pipeline = SubResource("Resource_ui_click_pipeline")
 
 [node name="HUD" type="CanvasLayer" unique_id=606421690]
 
@@ -117,7 +126,7 @@ text = "Play Again"
 
 [node name="DeusConfiguration" type="Node" parent="Root/GameOverlay/VBox/RestartButton" unique_id=673827082]
 script = ExtResource("1_deus_cfg")
-signals_to_pipelines = Array[ExtResource("2_sig_cfg")]([SubResource("Resource_sig_pressed")])
+signals_to_pipelines = Array[ExtResource("2_sig_cfg")]([SubResource("Resource_sig_pressed"), SubResource("Resource_sig_pressed_click")])
 
 [node name="PauseOverlay" type="Label" parent="Root" unique_id=1947071531 groups=["pause_overlay"]]
 visible = false
