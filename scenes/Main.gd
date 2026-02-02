@@ -20,7 +20,7 @@ func _ready():
 	GameOverAnimationPipeline.played = false
 
 	# Scheduled pipelines (run every frame)
-	for pipeline in [TouchZoneInputPipeline, PaddleInputPipeline, TouchPaddleInputPipeline, MovementPipeline, PositionClampPipeline, BallMovementPipeline, BallSpeedCurvePipeline, WallReflectionPipeline, DamagePipeline, DestructionPipeline, BrickVisualSyncPipeline, BallMissedPipeline, PausePipeline, HUDSyncPipeline, OverlaySyncPipeline, ScreenShakePipeline, WinAnimationPipeline, GameOverAnimationPipeline]:
+	for pipeline in [TouchZoneInputPipeline, PaddleInputPipeline, TouchPaddleInputPipeline, MovementPipeline, PositionClampPipeline, BallMovementPipeline, BallSpeedCurvePipeline, WallReflectionPipeline, DamagePipeline, DestructionPipeline, BrickVisualSyncPipeline, BallMissedPipeline, PausePipeline, HUDSyncPipeline, OverlaySyncPipeline, ScreenShakePipeline, ComboDecayPipeline, WinAnimationPipeline, GameOverAnimationPipeline]:
 		Deus.register_pipeline(pipeline)
 		Deus.pipeline_scheduler.register_task(
 			PipelineSchedulerDefaults.OnUpdate, pipeline
@@ -37,6 +37,7 @@ func _ready():
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(WallReflectionPipeline, "_stage_reflect"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(BallMissedPipeline, "_stage_detect"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(ScreenShakePipeline, "_stage_apply"), true)
+	Deus.inject_pipeline(PauseGuardPipeline, Callable(ComboDecayPipeline, "_stage_decay"), true)
 
 	# Shake trigger injects before damage — reads pending Damage to detect hits this frame
 	Deus.inject_pipeline(ShakeTriggerPipeline, Callable(DamagePipeline, "_stage_apply"), true)
@@ -61,6 +62,10 @@ func _ready():
 	Deus.inject_pipeline(HitFlashPipeline, Callable(BrickCollisionPipeline, "_stage_collide"), false)
 	Deus.inject_pipeline(ImpactBurstPipeline, Callable(BrickCollisionPipeline, "_stage_collide"), false)
 	Deus.inject_pipeline(BallImpactParticlePipeline, Callable(BrickCollisionPipeline, "_stage_collide"), false)
+	Deus.inject_pipeline(ComboIncrementPipeline, Callable(BrickCollisionPipeline, "_stage_collide"), false)
+
+	# Combo reset on life lost
+	Deus.inject_pipeline(ComboResetPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
 
 	# Paddle stretch and brick squeeze deformation
 	Deus.inject_pipeline(PaddleStretchPipeline, Callable(DeflectPipeline, "_stage_deflect"), false)
