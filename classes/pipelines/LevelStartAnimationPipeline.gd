@@ -55,6 +55,9 @@ static func _stage_animate(context):
 	if ball:
 		ball_target_y = ball.position.y
 		ball.position.y = -40.0
+		# Disable collision during drop-in to prevent false area_entered signals
+		ball.monitoring = false
+		ball.monitorable = false
 
 	# Calculate total brick animation time
 	var total_brick_time = row_keys.size() * ROW_STAGGER + ROW_DURATION
@@ -91,8 +94,16 @@ static func _stage_animate(context):
 			.set_ease(Tween.EASE_OUT) \
 			.set_trans(Tween.TRANS_BACK)
 
-	# On complete: transition to PLAYING
+	# On complete: re-enable collision, sync ECS position, transition to PLAYING
 	tween.tween_callback(func():
+		if ball:
+			ball.monitoring = true
+			ball.monitorable = true
+			# Sync ECS Position component with the tween's final node position
+			var pos_comp = registry.get_component(ball, "Position")
+			if pos_comp:
+				pos_comp.value = ball.position
+				world.set_component(ball, Position, pos_comp)
 		var gs = world.get_component(world, GameState)
 		if gs:
 			gs.state = GameState.State.PLAYING
