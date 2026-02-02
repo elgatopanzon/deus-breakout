@@ -76,6 +76,12 @@ func _ready():
 	# Shake trigger injects before damage — reads pending Damage to detect hits this frame
 	Deus.inject_pipeline(ShakeTriggerPipeline, Callable(DamagePipeline, "_stage_apply"), true)
 
+	# Gameplay sound: brick hit after damage, brick break before destruction
+	Deus.inject_pipeline(BrickHitSoundPipeline, Callable(DamagePipeline, "_stage_apply"), false)
+	Deus.inject_pipeline(PauseGuardPipeline, Callable(BrickHitSoundPipeline, "_stage_play"), true)
+	Deus.inject_pipeline(BrickBreakSoundPipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
+	Deus.inject_pipeline(PauseGuardPipeline, Callable(BrickBreakSoundPipeline, "_stage_play"), true)
+
 	# Scoring + win check + particle effects inject before destruction — components still available
 	Deus.inject_pipeline(ScoringPipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
 	Deus.inject_pipeline(WinCheckPipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
@@ -110,11 +116,15 @@ func _ready():
 	Deus.inject_pipeline(BrickSqueezePipeline, Callable(DamagePipeline, "_stage_apply"), false)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(BrickSqueezePipeline, "_stage_squeeze"), true)
 
-	# Wall and paddle spark particles
+	# Wall and paddle spark particles + sound
 	Deus.inject_pipeline(WallSparkPipeline, Callable(WallReflectionPipeline, "_stage_reflect"), false)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(WallSparkPipeline, "_stage_spark"), true)
+	Deus.inject_pipeline(WallBounceSoundPipeline, Callable(WallReflectionPipeline, "_stage_reflect"), false)
+	Deus.inject_pipeline(PauseGuardPipeline, Callable(WallBounceSoundPipeline, "_stage_play"), true)
 	Deus.inject_pipeline(PaddleSparkPipeline, Callable(DeflectPipeline, "_stage_deflect"), false)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(PaddleSparkPipeline, "_stage_spark"), true)
+	Deus.inject_pipeline(PaddleHitSoundPipeline, Callable(DeflectPipeline, "_stage_deflect"), false)
+	Deus.inject_pipeline(PauseGuardPipeline, Callable(PaddleHitSoundPipeline, "_stage_play"), true)
 
 	# Game state singletons on world node
 	Deus.set_component(Deus, Score, Score.new())
