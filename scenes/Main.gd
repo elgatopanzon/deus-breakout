@@ -53,6 +53,12 @@ func _ready():
 	Deus.inject_pipeline(ImpactBurstPipeline, Callable(BrickCollisionPipeline, "_stage_collide"), false)
 	Deus.inject_pipeline(BallImpactParticlePipeline, Callable(BrickCollisionPipeline, "_stage_collide"), false)
 
+	# Wall and paddle spark particles
+	Deus.inject_pipeline(WallSparkPipeline, Callable(WallReflectionPipeline, "_stage_reflect"), false)
+	Deus.inject_pipeline(PauseGuardPipeline, Callable(WallSparkPipeline, "_stage_spark"), true)
+	Deus.inject_pipeline(PaddleSparkPipeline, Callable(DeflectPipeline, "_stage_deflect"), false)
+	Deus.inject_pipeline(PauseGuardPipeline, Callable(PaddleSparkPipeline, "_stage_spark"), true)
+
 	# Game state singletons on world node
 	Deus.set_component(Deus, Score, Score.new())
 	Deus.set_component(Deus, Lives, Lives.new())
