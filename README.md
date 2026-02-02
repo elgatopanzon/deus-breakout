@@ -109,16 +109,22 @@ Deus.set_component(Deus, GameState, GameState.new())
 
 ```
 classes/
-  components/    # Data containers (Health, Velocity, Position, Score, Lives, ...)
-  pipelines/     # Systems (DamagePipeline, BallMovementPipeline, HUDSyncPipeline, ...)
+  components/    # 18 data containers (Health, Velocity, Score, Combo, ScreenShake, SoundBank, ...)
+  pipelines/     # 54 systems (DamagePipeline, BallMovementPipeline, ScreenShakePipeline, ...)
 scenes/
-  Main.tscn          # Root scene with Paddle, Ball, HUD, TouchControls
-  Main.gd            # Bootstrap: pipeline registration and injection
+  Main.tscn          # Root scene with Paddle, Ball, HUD, TouchControls, Camera2D, AudioPool
+  Main.gd            # Bootstrap: pipeline registration, injection, and singleton setup
   Ball.tscn          # Ball entity with DeusConfiguration
   Brick.tscn         # Brick entity template with DeusConfiguration
   Paddle.tscn        # Paddle entity with DeusConfiguration
-  HUD.tscn           # UI layer with DeusConfiguration on each element
+  HUD.tscn           # UI layer (score, lives, combo, overlays) - no scripts
   TouchControls.tscn # Invisible left/right touch zones for Android
+  effects/
+    BallSpark.tscn   # Spark particles on ball impacts
+    BrickDebris.tscn # Debris particles on brick destruction
+    DustPuff.tscn    # Dust cloud particles
+assets/
+  audio/             # 9 sfx (paddle_hit, brick_break, wall_bounce, ball_launch, ...)
 addons/deus/     # Godot Deus ECS framework
 ```
 
@@ -143,11 +149,11 @@ addons/deus/     # Godot Deus ECS framework
 
 ### Phase 2: Game Feel & Polish
 - [x] Android touch controls
-- [ ] Visual effects and screen shake on brick destruction
-- [ ] Particle effects for ball impacts and brick breaks
-- [ ] Sound design (paddle hit, brick break, wall bounce, game over)
-- [ ] Animations and transitions (level start, life lost, game won)
-- [ ] Game feel tuning and juice
+- [x] Visual effects and screen shake on brick destruction
+- [x] Particle effects for ball impacts and brick breaks
+- [x] Sound design (paddle hit, brick break, wall bounce, game over, win, ball launch, life lost, UI click)
+- [x] Animations and transitions (level start, life lost, game won, game over)
+- [x] Game feel tuning and juice (hitstop, combo system, ball speed curve, squash-and-stretch)
 
 ### Phase 3: Content & Levels
 - [ ] Multiple brick layouts and level designs
@@ -157,10 +163,22 @@ addons/deus/     # Godot Deus ECS framework
 
 ## Completed Work
 
+- **2026-02-02** - Sound design (9 sfx: paddle hit, brick break/hit, wall bounce, ball launch, life lost, game over, win, UI click)
+- **2026-02-02** - Custom scheduler phases (Input > Physics > Effects) replacing priority numbers
+- **2026-02-01** - Combo system with multiplier tiers and HUD display
+- **2026-02-01** - Hitstop (brief frame freeze on brick destruction)
+- **2026-02-01** - Ball speed curve (gradual ramp during play, reset on life lost)
+- **2026-02-01** - Squash-and-stretch (paddle stretch on hit, brick squeeze on damage)
+- **2026-02-01** - Win and game over overlay animations (tweens)
+- **2026-02-01** - Life lost animation (freeze, flash, ball drop-in)
+- **2026-02-01** - Level start animation (brick pop-in, paddle slide, ball drop)
+- **2026-02-01** - Particle effects (brick debris, dust puffs, ball sparks, wall/paddle sparks)
+- **2026-02-01** - Screen shake with decaying random camera offset
+- **2026-02-01** - Hit flash and impact burst on brick damage
 - **2026-01-31** - Android touch controls
-- **2026-01-31** - Basic UI
+- **2026-01-31** - Basic UI (HUD, overlays, pause)
 - **2026-01-31** - Win/lose conditions
 - **2026-01-31** - Score and lives tracking
-- **2026-01-31** - Brick entities
-- **2026-01-31** - Ball entity
-- **2026-01-29** - Paddle entity
+- **2026-01-31** - Brick entities with health tiers and visual sync
+- **2026-01-31** - Ball entity with physics and deflection
+- **2026-01-29** - Paddle entity with input and movement
