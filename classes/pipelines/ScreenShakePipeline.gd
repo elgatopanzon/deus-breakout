@@ -6,27 +6,21 @@ class_name ScreenShakePipeline extends DefaultPipeline
 static func _requires(): return [ScreenShake]
 
 static func _stage_apply(context):
-	var shake = context.world.get_component(context.world, ScreenShake)
-	if shake == null:
-		return
-
 	var camera = context._node.get_viewport().get_camera_2d()
 	if camera == null:
 		return
 
-	if not shake.active:
+	if not context.ScreenShake.active:
 		camera.offset = Vector2.ZERO
 		return
 
-	shake.timer -= context.world.delta
-	if shake.timer <= 0.0:
-		shake.active = false
+	context.ScreenShake.timer -= context.world.delta
+	if context.ScreenShake.timer <= 0.0:
+		context.ScreenShake.active = false
 		camera.offset = Vector2.ZERO
-		context.world.set_component(context.world, ScreenShake, shake)
 		return
 
-	var decay = shake.timer / shake.duration
-	var offset_x = randf_range(-shake.intensity, shake.intensity) * decay
-	var offset_y = randf_range(-shake.intensity, shake.intensity) * decay
+	var decay = context.ScreenShake.timer / context.ScreenShake.duration
+	var offset_x = randf_range(-context.ScreenShake.intensity, context.ScreenShake.intensity) * decay
+	var offset_y = randf_range(-context.ScreenShake.intensity, context.ScreenShake.intensity) * decay
 	camera.offset = Vector2(offset_x, offset_y)
-	context.world.set_component(context.world, ScreenShake, shake)
