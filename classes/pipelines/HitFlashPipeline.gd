@@ -19,8 +19,12 @@ static func _stage_flash(context):
 	if visual == null:
 		return
 
+	var health = context.world.get_component(context._node, Health)
+	if health == null:
+		return
+
 	var restore_color = BrickVisualSyncPipeline.color_for_health(
-		context.Health.value - context.Damage.value
+		health.value - context.Damage.value
 	)
 
 	var tween = node.create_tween()

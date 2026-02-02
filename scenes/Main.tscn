@@ -17,4 +17,5 @@ script = ExtResource("1_main")
 
 [node name="TouchControls" parent="." unique_id=1264324424 instance=ExtResource("5_touch")]
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=454199205]
+position = Vector2(576, 324)
