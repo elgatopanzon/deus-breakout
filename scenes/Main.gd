@@ -58,6 +58,10 @@ func _ready():
 	Deus.set_component(Deus, GameState, gs)
 	Deus.set_component(Deus, ScreenShake, ScreenShake.new())
 	Deus.set_component(Deus, AnimationState, AnimationState.new())
+	Deus.set_component(Deus, Combo, Combo.new())
+	Deus.set_component(Deus, ComboTiers, ComboTiers.new())
+	Deus.set_component(Deus, BallSpeedCurve, BallSpeedCurve.new())
+	Deus.set_component(Deus, Hitstop, Hitstop.new())
 
 	# Spawn brick grid
 	Deus.register_pipeline(SpawnBricksPipeline)
