@@ -19,35 +19,44 @@ func _ready():
 	WinAnimationPipeline.played = false
 	GameOverAnimationPipeline.played = false
 
-	# Scheduled pipelines (run every frame)
-	# Priority groups: input (10) > movement/physics (5) > effects/UI (0)
-	# Scheduler sorts by priority descending so higher values run first
-	var scheduled = [
-		[TouchZoneInputPipeline, 10],
-		[PaddleInputPipeline, 10],
-		[TouchPaddleInputPipeline, 10],
-		[MovementPipeline, 5],
-		[PositionClampPipeline, 5],
-		[BallMovementPipeline, 5],
-		[BallSpeedCurvePipeline, 5],
-		[WallReflectionPipeline, 5],
-		[DamagePipeline, 5],
-		[DestructionPipeline, 5],
-		[BrickVisualSyncPipeline, 0],
-		[BallMissedPipeline, 5],
-		[PausePipeline, 0],
-		[HUDSyncPipeline, 0],
-		[OverlaySyncPipeline, 0],
-		[ScreenShakePipeline, 0],
-		[ComboDecayPipeline, 0],
-		[WinAnimationPipeline, 0],
-		[GameOverAnimationPipeline, 0],
+	# Register custom breakout phases: Input > Physics > Effects
+	BreakoutPhases.init_phases(Deus.pipeline_scheduler)
+
+	# Scheduled pipelines grouped by phase
+	var input_pipelines = [
+		TouchZoneInputPipeline,
+		PaddleInputPipeline,
+		TouchPaddleInputPipeline,
 	]
-	for entry in scheduled:
-		Deus.register_pipeline(entry[0])
-		Deus.pipeline_scheduler.register_task(
-			PipelineSchedulerDefaults.OnUpdate, entry[0], 0.0, null, null, entry[1]
-		)
+	var physics_pipelines = [
+		MovementPipeline,
+		PositionClampPipeline,
+		BallMovementPipeline,
+		BallSpeedCurvePipeline,
+		WallReflectionPipeline,
+		DamagePipeline,
+		DestructionPipeline,
+		BallMissedPipeline,
+	]
+	var effects_pipelines = [
+		BrickVisualSyncPipeline,
+		PausePipeline,
+		HUDSyncPipeline,
+		OverlaySyncPipeline,
+		ScreenShakePipeline,
+		ComboDecayPipeline,
+		WinAnimationPipeline,
+		GameOverAnimationPipeline,
+	]
+	for p in input_pipelines:
+		Deus.register_pipeline(p)
+		Deus.pipeline_scheduler.register_task(BreakoutPhases.InputPhase, p)
+	for p in physics_pipelines:
+		Deus.register_pipeline(p)
+		Deus.pipeline_scheduler.register_task(BreakoutPhases.PhysicsPhase, p)
+	for p in effects_pipelines:
+		Deus.register_pipeline(p)
+		Deus.pipeline_scheduler.register_task(BreakoutPhases.EffectsPhase, p)
 
 	# Pause guard injects before gameplay pipelines — cancels when not playing
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(TouchZoneInputPipeline, "_stage_detect_touch"), true)
