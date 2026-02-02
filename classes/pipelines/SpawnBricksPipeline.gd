@@ -15,8 +15,11 @@ static func _stage_spawn(context):
 	var parent = context._node
 	var vp_size = parent.get_viewport_rect().size
 
-	# Level defaults to 1 until Level component is wired (task #4)
+	# Read current level from singleton (Pattern B: not in _requires())
 	var level = 1
+	var level_comp = context.world.get_component(Deus, Level)
+	if level_comp != null:
+		level = level_comp.number
 
 	var layout = BrickLayoutGenerator.generate(level, vp_size)
 	var grid_width = layout.grid_cols * BRICK_SIZE.x + (layout.grid_cols - 1) * BRICK_GAP

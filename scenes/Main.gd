@@ -136,6 +136,7 @@ func _ready():
 	Deus.set_component(Deus, ComboTiers, ComboTiers.new())
 	Deus.set_component(Deus, BallSpeedCurve, BallSpeedCurve.new())
 	Deus.set_component(Deus, Hitstop, Hitstop.new())
+	Deus.set_component(Deus, Level, Level.new())
 
 	# Audio: preload streams into SoundBank singleton
 	var sb = SoundBank.new()
