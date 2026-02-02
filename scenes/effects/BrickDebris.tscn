@@ -25,10 +25,7 @@ size = Vector2(8, 8)
 emitting = false
 amount = 12
 lifetime = 0.4
+one_shot = true
 process_material = SubResource("ParticleProcessMaterial_debris")
 mesh = SubResource("QuadMesh_debris")
 explosion_shape = 0
-
-[node name="Timer" type="Timer" parent="."]
-wait_time = 0.5
-one_shot = true

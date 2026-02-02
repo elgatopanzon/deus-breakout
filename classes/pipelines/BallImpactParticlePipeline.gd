@@ -28,3 +28,4 @@ static func _stage_spark(context):
 	spark.position = contact_pos
 	context._node.get_parent().add_child(spark)
 	spark.emitting = true
+	spark.get_tree().create_timer(spark.lifetime + 0.1).timeout.connect(spark.queue_free)

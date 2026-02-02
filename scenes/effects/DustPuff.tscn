@@ -19,17 +19,9 @@ anim_speed_min = 0.0
 anim_speed_max = 0.0
 color = Color(0.8, 0.8, 0.8, 1)
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_dust"]
-radius = 12.0
-
 [node name="DustPuff" type="GPUParticles2D"]
 emitting = false
 amount = 6
 lifetime = 0.3
 one_shot = true
 process_material = SubResource("ParticleProcessMaterial_dust")
-radial_vel_curve = SubResource("CircleShape2D_dust")
-
-[node name="Timer" type="Timer" parent="."]
-wait_time = 0.4
-one_shot = true
