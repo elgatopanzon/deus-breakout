@@ -26,6 +26,8 @@ func _ready():
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(TouchZoneInputPipeline, "_stage_detect_touch"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(TouchPaddleInputPipeline, "_stage_read_touch"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(PaddleInputPipeline, "_stage_read_input"), true)
+	Deus.inject_pipeline(PauseGuardPipeline, Callable(MovementPipeline, "_stage_apply_movement"), true)
+	Deus.inject_pipeline(PauseGuardPipeline, Callable(PositionClampPipeline, "_stage_clamp"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(BallMovementPipeline, "_stage_move"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(WallReflectionPipeline, "_stage_reflect"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(BallMissedPipeline, "_stage_detect"), true)
@@ -62,9 +64,7 @@ func _ready():
 	# Game state singletons on world node
 	Deus.set_component(Deus, Score, Score.new())
 	Deus.set_component(Deus, Lives, Lives.new())
-	var gs = GameState.new()
-	gs.state = GameState.State.PLAYING  # override STARTING default until LevelStartAnimationPipeline exists
-	Deus.set_component(Deus, GameState, gs)
+	Deus.set_component(Deus, GameState, GameState.new())
 	Deus.set_component(Deus, ScreenShake, ScreenShake.new())
 	Deus.set_component(Deus, AnimationState, AnimationState.new())
 	Deus.set_component(Deus, Combo, Combo.new())
@@ -72,6 +72,8 @@ func _ready():
 	Deus.set_component(Deus, BallSpeedCurve, BallSpeedCurve.new())
 	Deus.set_component(Deus, Hitstop, Hitstop.new())
 
-	# Spawn brick grid
+	# Spawn brick grid then animate level start
 	Deus.register_pipeline(SpawnBricksPipeline)
 	Deus.execute_pipeline(SpawnBricksPipeline, self)
+	Deus.register_pipeline(LevelStartAnimationPipeline)
+	Deus.execute_pipeline(LevelStartAnimationPipeline, self)
