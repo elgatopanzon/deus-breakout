@@ -47,6 +47,10 @@ func _ready():
 	# Damage accumulation injects into brick collision detection
 	Deus.inject_pipeline(BallDamagePipeline, Callable(BrickCollisionPipeline, "_stage_collide"), false)
 
+	# Visual effects inject after damage accumulation in collision chain
+	Deus.inject_pipeline(HitFlashPipeline, Callable(BrickCollisionPipeline, "_stage_collide"), false)
+	Deus.inject_pipeline(ImpactBurstPipeline, Callable(BrickCollisionPipeline, "_stage_collide"), false)
+
 	# Game state singletons on world node
 	Deus.set_component(Deus, Score, Score.new())
 	Deus.set_component(Deus, Lives, Lives.new())
