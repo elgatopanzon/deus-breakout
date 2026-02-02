@@ -20,16 +20,16 @@ script = ExtResource("1_main")
 [node name="Camera2D" type="Camera2D" parent="." unique_id=454199205]
 position = Vector2(576, 324)
 
-[node name="AudioPool" type="Node" parent="." groups=["audio_pool"]]
+[node name="AudioPool" type="Node" parent="." unique_id=1720535422 groups=["audio_pool"]]
 
-[node name="Player1" type="AudioStreamPlayer" parent="AudioPool"]
+[node name="Player1" type="AudioStreamPlayer" parent="AudioPool" unique_id=2107670178]
 
-[node name="Player2" type="AudioStreamPlayer" parent="AudioPool"]
+[node name="Player2" type="AudioStreamPlayer" parent="AudioPool" unique_id=1828836693]
 
-[node name="Player3" type="AudioStreamPlayer" parent="AudioPool"]
+[node name="Player3" type="AudioStreamPlayer" parent="AudioPool" unique_id=2009798913]
 
-[node name="Player4" type="AudioStreamPlayer" parent="AudioPool"]
+[node name="Player4" type="AudioStreamPlayer" parent="AudioPool" unique_id=552356914]
 
-[node name="Player5" type="AudioStreamPlayer" parent="AudioPool"]
+[node name="Player5" type="AudioStreamPlayer" parent="AudioPool" unique_id=1640466253]
 
-[node name="Player6" type="AudioStreamPlayer" parent="AudioPool"]
+[node name="Player6" type="AudioStreamPlayer" parent="AudioPool" unique_id=113926299]
