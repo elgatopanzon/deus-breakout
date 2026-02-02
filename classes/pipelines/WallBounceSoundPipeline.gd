@@ -1,7 +1,9 @@
 # ABOUTME: Plays short bounce blip when ball reflects off a wall
-# ABOUTME: Injected after WallReflectionPipeline._stage_reflect; detects edge contact
+# ABOUTME: Injected after WallReflectionPipeline._stage_reflect; frame-debounced
 
 class_name WallBounceSoundPipeline extends DefaultPipeline
+
+static var last_played_frame: int = -1
 
 static func _requires(): return [Position, Size]
 
@@ -14,6 +16,13 @@ static func _stage_play(context):
 	var hit = pos.x <= 0.0 or pos.x + size.x >= vp.x or pos.y <= 0.0
 	if not hit:
 		return
+
+	# Debounce: only play once per frame (wall reflection clamps position,
+	# so the ball may sit at the edge for multiple frames during pushback)
+	var frame = Engine.get_process_frames()
+	if frame == last_played_frame:
+		return
+	last_played_frame = frame
 
 	var sb = context.world.get_component(context.world, SoundBank)
 	if sb == null or not sb.streams.has("wall_bounce"):

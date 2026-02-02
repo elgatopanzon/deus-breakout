@@ -1,12 +1,17 @@
 # ABOUTME: Plays crunch/shatter sound when a brick is destroyed
-# ABOUTME: Injected before DestructionPipeline._stage_destroy; checks Health <= 0
+# ABOUTME: Injected before DamagePipeline._stage_apply; predicts destruction from pending Damage
 
 class_name BrickBreakSoundPipeline extends DefaultPipeline
 
 static func _requires(): return []
 
 static func _stage_play(context):
-	if context.Health.value > 0:
+	# Only fire on frames where damage is pending (before DamagePipeline drains it)
+	if context.Damage.value <= 0:
+		return
+
+	# Predict outcome: will this brick be destroyed?
+	if context.Health.value - context.Damage.value > 0:
 		return
 
 	var sb = context.world.get_component(context.world, SoundBank)

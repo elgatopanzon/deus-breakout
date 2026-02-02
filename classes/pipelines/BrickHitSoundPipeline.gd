@@ -1,13 +1,17 @@
 # ABOUTME: Plays softer tap/tick when a brick takes damage but survives
-# ABOUTME: Injected after DamagePipeline._stage_apply; checks Health > 0
+# ABOUTME: Injected before DamagePipeline._stage_apply; reads pending Damage to detect event
 
 class_name BrickHitSoundPipeline extends DefaultPipeline
 
 static func _requires(): return []
 
 static func _stage_play(context):
-	# Only play when brick survived (Health > 0 after damage applied)
-	if context.Health.value <= 0:
+	# Only fire on frames where damage is pending (before DamagePipeline drains it)
+	if context.Damage.value <= 0:
+		return
+
+	# Predict outcome: will this brick survive?
+	if context.Health.value - context.Damage.value <= 0:
 		return
 
 	var sb = context.world.get_component(context.world, SoundBank)

@@ -19,6 +19,8 @@ func _ready():
 	WinAnimationPipeline.played = false
 	GameOverAnimationPipeline.played = false
 	GameStateSoundPipeline.previous_state = GameState.State.STARTING
+	WallBounceSoundPipeline.last_played_frame = -1
+	PaddleHitSoundPipeline.last_played_frame = -1
 
 	# Register custom breakout phases: Input > Physics > Effects
 	BreakoutPhases.init_phases(Deus.pipeline_scheduler)
@@ -73,13 +75,11 @@ func _ready():
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(ScreenShakePipeline, "_stage_apply"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(ComboDecayPipeline, "_stage_decay"), true)
 
-	# Shake trigger injects before damage — reads pending Damage to detect hits this frame
+	# Shake trigger + brick sounds inject before damage — read pending Damage to detect hits
 	Deus.inject_pipeline(ShakeTriggerPipeline, Callable(DamagePipeline, "_stage_apply"), true)
-
-	# Gameplay sound: brick hit after damage, brick break before destruction
-	Deus.inject_pipeline(BrickHitSoundPipeline, Callable(DamagePipeline, "_stage_apply"), false)
+	Deus.inject_pipeline(BrickHitSoundPipeline, Callable(DamagePipeline, "_stage_apply"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(BrickHitSoundPipeline, "_stage_play"), true)
-	Deus.inject_pipeline(BrickBreakSoundPipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
+	Deus.inject_pipeline(BrickBreakSoundPipeline, Callable(DamagePipeline, "_stage_apply"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(BrickBreakSoundPipeline, "_stage_play"), true)
 
 	# Scoring + win check + particle effects inject before destruction — components still available
