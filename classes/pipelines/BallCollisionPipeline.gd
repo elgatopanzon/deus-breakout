@@ -9,7 +9,7 @@
 
 class_name BallCollisionPipeline extends DefaultPipeline
 
-static func _requires(): return [Velocity]
+static func _requires(): return [Position, Velocity]
 
 static func _stage_reflect(context):
 	var payload = context.payload
@@ -51,3 +51,6 @@ static func _stage_reflect(context):
 
 	# Standard reflection: d' = d - 2(d·n)n
 	context.Velocity.direction = (dir - 2.0 * dir.dot(normal) * normal).normalized()
+
+	# Push ball out of collision surface to prevent multi-hit on next frame
+	context.Position.value += normal * 3.0
