@@ -20,10 +20,33 @@ func _ready():
 	GameOverAnimationPipeline.played = false
 
 	# Scheduled pipelines (run every frame)
-	for pipeline in [TouchZoneInputPipeline, PaddleInputPipeline, TouchPaddleInputPipeline, MovementPipeline, PositionClampPipeline, BallMovementPipeline, BallSpeedCurvePipeline, WallReflectionPipeline, DamagePipeline, DestructionPipeline, BrickVisualSyncPipeline, BallMissedPipeline, PausePipeline, HUDSyncPipeline, OverlaySyncPipeline, ScreenShakePipeline, ComboDecayPipeline, WinAnimationPipeline, GameOverAnimationPipeline]:
-		Deus.register_pipeline(pipeline)
+	# Priority groups: input (10) > movement/physics (5) > effects/UI (0)
+	# Scheduler sorts by priority descending so higher values run first
+	var scheduled = [
+		[TouchZoneInputPipeline, 10],
+		[PaddleInputPipeline, 10],
+		[TouchPaddleInputPipeline, 10],
+		[MovementPipeline, 5],
+		[PositionClampPipeline, 5],
+		[BallMovementPipeline, 5],
+		[BallSpeedCurvePipeline, 5],
+		[WallReflectionPipeline, 5],
+		[DamagePipeline, 5],
+		[DestructionPipeline, 5],
+		[BrickVisualSyncPipeline, 0],
+		[BallMissedPipeline, 5],
+		[PausePipeline, 0],
+		[HUDSyncPipeline, 0],
+		[OverlaySyncPipeline, 0],
+		[ScreenShakePipeline, 0],
+		[ComboDecayPipeline, 0],
+		[WinAnimationPipeline, 0],
+		[GameOverAnimationPipeline, 0],
+	]
+	for entry in scheduled:
+		Deus.register_pipeline(entry[0])
 		Deus.pipeline_scheduler.register_task(
-			PipelineSchedulerDefaults.OnUpdate, pipeline
+			PipelineSchedulerDefaults.OnUpdate, entry[0], 0.0, null, null, entry[1]
 		)
 
 	# Pause guard injects before gameplay pipelines — cancels when not playing
