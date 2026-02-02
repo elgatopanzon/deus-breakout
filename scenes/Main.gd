@@ -123,6 +123,21 @@ func _ready():
 	Deus.set_component(Deus, BallSpeedCurve, BallSpeedCurve.new())
 	Deus.set_component(Deus, Hitstop, Hitstop.new())
 
+	# Audio: preload streams into SoundBank singleton
+	var sb = SoundBank.new()
+	sb.streams = {
+		"paddle_hit": preload("res://assets/audio/paddle_hit.wav"),
+		"brick_break": preload("res://assets/audio/brick_break.wav"),
+		"brick_hit": preload("res://assets/audio/brick_hit.wav"),
+		"wall_bounce": preload("res://assets/audio/wall_bounce.wav"),
+		"ball_launch": preload("res://assets/audio/ball_launch.wav"),
+		"life_lost": preload("res://assets/audio/life_lost.wav"),
+		"game_over": preload("res://assets/audio/game_over.wav"),
+		"win": preload("res://assets/audio/win.wav"),
+		"ui_click": preload("res://assets/audio/ui_click.wav"),
+	}
+	Deus.set_component(Deus, SoundBank, sb)
+
 	# Spawn brick grid then animate level start
 	Deus.register_pipeline(SpawnBricksPipeline)
 	Deus.execute_pipeline(SpawnBricksPipeline, self)
