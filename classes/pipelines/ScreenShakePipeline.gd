@@ -22,9 +22,11 @@ static func _stage_apply(context):
 	if shake.timer <= 0.0:
 		shake.active = false
 		camera.offset = Vector2.ZERO
+		context.world.set_component(context.world, ScreenShake, shake)
 		return
 
 	var decay = shake.timer / shake.duration
 	var offset_x = randf_range(-shake.intensity, shake.intensity) * decay
 	var offset_y = randf_range(-shake.intensity, shake.intensity) * decay
 	camera.offset = Vector2(offset_x, offset_y)
+	context.world.set_component(context.world, ScreenShake, shake)
