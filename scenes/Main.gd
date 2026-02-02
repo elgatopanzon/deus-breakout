@@ -15,8 +15,12 @@ func _ready():
 		if not is_instance_valid(node):
 			Deus.component_registry.node_components.erase(node)
 
+	# Reset one-shot animation flags (statics persist across scene reloads)
+	WinAnimationPipeline.played = false
+	GameOverAnimationPipeline.played = false
+
 	# Scheduled pipelines (run every frame)
-	for pipeline in [TouchZoneInputPipeline, PaddleInputPipeline, TouchPaddleInputPipeline, MovementPipeline, PositionClampPipeline, BallMovementPipeline, WallReflectionPipeline, DamagePipeline, DestructionPipeline, BrickVisualSyncPipeline, BallMissedPipeline, PausePipeline, HUDSyncPipeline, OverlaySyncPipeline, ScreenShakePipeline]:
+	for pipeline in [TouchZoneInputPipeline, PaddleInputPipeline, TouchPaddleInputPipeline, MovementPipeline, PositionClampPipeline, BallMovementPipeline, WallReflectionPipeline, DamagePipeline, DestructionPipeline, BrickVisualSyncPipeline, BallMissedPipeline, PausePipeline, HUDSyncPipeline, OverlaySyncPipeline, ScreenShakePipeline, WinAnimationPipeline, GameOverAnimationPipeline]:
 		Deus.register_pipeline(pipeline)
 		Deus.pipeline_scheduler.register_task(
 			PipelineSchedulerDefaults.OnUpdate, pipeline
