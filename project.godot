@@ -15,25 +15,24 @@ run/main_scene="res://scenes/Main.tscn"
 config/features=PackedStringArray("4.6")
 config/icon="res://icon.svg"
 
-[display]
-
-window/size/viewport_width=1152
-window/size/viewport_height=648
-window/stretch/mode="canvas_items"
-window/stretch/aspect="expand"
-window/handheld/orientation=4
-
 [autoload]
 
 Deus="*uid://c3lfx3rk552nn"
 
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/deus/plugin.cfg")
-
 [debug]
 
 settings/stdout/print_fps=true
+
+[display]
+
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/handheld/orientation=4
+window/vsync/vsync_mode=0
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/deus/plugin.cfg")
 
 [rendering]
 
