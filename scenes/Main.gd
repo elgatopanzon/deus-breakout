@@ -47,6 +47,7 @@ func _ready():
 	Deus.inject_pipeline(WinCheckPipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
 	Deus.inject_pipeline(BrickDestructionParticlePipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(BrickDestructionParticlePipeline, "_stage_spawn"), true)
+	Deus.inject_pipeline(HitstopTriggerPipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
 
 	# Lives + game over + respawn inject into ball-missed detection pipeline
 	Deus.inject_pipeline(LivesDecrementPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
