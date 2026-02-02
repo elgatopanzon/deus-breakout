@@ -20,7 +20,7 @@ func _ready():
 	GameOverAnimationPipeline.played = false
 
 	# Scheduled pipelines (run every frame)
-	for pipeline in [TouchZoneInputPipeline, PaddleInputPipeline, TouchPaddleInputPipeline, MovementPipeline, PositionClampPipeline, BallMovementPipeline, WallReflectionPipeline, DamagePipeline, DestructionPipeline, BrickVisualSyncPipeline, BallMissedPipeline, PausePipeline, HUDSyncPipeline, OverlaySyncPipeline, ScreenShakePipeline, WinAnimationPipeline, GameOverAnimationPipeline]:
+	for pipeline in [TouchZoneInputPipeline, PaddleInputPipeline, TouchPaddleInputPipeline, MovementPipeline, PositionClampPipeline, BallMovementPipeline, BallSpeedCurvePipeline, WallReflectionPipeline, DamagePipeline, DestructionPipeline, BrickVisualSyncPipeline, BallMissedPipeline, PausePipeline, HUDSyncPipeline, OverlaySyncPipeline, ScreenShakePipeline, WinAnimationPipeline, GameOverAnimationPipeline]:
 		Deus.register_pipeline(pipeline)
 		Deus.pipeline_scheduler.register_task(
 			PipelineSchedulerDefaults.OnUpdate, pipeline
@@ -33,6 +33,7 @@ func _ready():
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(MovementPipeline, "_stage_apply_movement"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(PositionClampPipeline, "_stage_clamp"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(BallMovementPipeline, "_stage_move"), true)
+	Deus.inject_pipeline(PauseGuardPipeline, Callable(BallSpeedCurvePipeline, "_stage_ramp"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(WallReflectionPipeline, "_stage_reflect"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(BallMissedPipeline, "_stage_detect"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(ScreenShakePipeline, "_stage_apply"), true)
@@ -51,6 +52,7 @@ func _ready():
 	Deus.inject_pipeline(GameOverPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
 	Deus.inject_pipeline(BallRespawnPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
 	Deus.inject_pipeline(LifeLostAnimationPipeline, Callable(BallRespawnPipeline, "_stage_respawn"), false)
+	Deus.inject_pipeline(BallSpeedResetPipeline, Callable(BallRespawnPipeline, "_stage_respawn"), false)
 
 	# Damage accumulation injects into brick collision detection
 	Deus.inject_pipeline(BallDamagePipeline, Callable(BrickCollisionPipeline, "_stage_collide"), false)
