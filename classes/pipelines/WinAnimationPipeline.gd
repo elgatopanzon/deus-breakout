@@ -18,7 +18,7 @@ static func _stage_animate(context):
 	played = true
 
 	var world = context.world
-	var vp = context._node.get_viewport_rect().size
+	var vp = context._node.get_viewport().get_visible_rect().size
 	var center = vp * 0.5
 
 	# Explode remaining bricks outward from center
