@@ -15,9 +15,10 @@ func _ready():
 		if not is_instance_valid(node):
 			Deus.component_registry.node_components.erase(node)
 
-	# Reset one-shot animation flags (statics persist across scene reloads)
+	# Reset one-shot animation flags and state tracking (statics persist across scene reloads)
 	WinAnimationPipeline.played = false
 	GameOverAnimationPipeline.played = false
+	GameStateSoundPipeline.previous_state = GameState.State.STARTING
 
 	# Register custom breakout phases: Input > Physics > Effects
 	BreakoutPhases.init_phases(Deus.pipeline_scheduler)
@@ -47,6 +48,7 @@ func _ready():
 		ComboDecayPipeline,
 		WinAnimationPipeline,
 		GameOverAnimationPipeline,
+		GameStateSoundPipeline,
 	]
 	for p in input_pipelines:
 		Deus.register_pipeline(p)
@@ -82,11 +84,13 @@ func _ready():
 	Deus.inject_pipeline(HitstopTriggerPipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
 
 	# Lives + game over + respawn inject into ball-missed detection pipeline
+	Deus.inject_pipeline(LifeLostSoundPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
 	Deus.inject_pipeline(LivesDecrementPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
 	Deus.inject_pipeline(GameOverPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
 	Deus.inject_pipeline(BallRespawnPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
 	Deus.inject_pipeline(LifeLostAnimationPipeline, Callable(BallRespawnPipeline, "_stage_respawn"), false)
 	Deus.inject_pipeline(BallSpeedResetPipeline, Callable(BallRespawnPipeline, "_stage_respawn"), false)
+	Deus.inject_pipeline(BallLaunchSoundPipeline, Callable(BallRespawnPipeline, "_stage_respawn"), false)
 
 	# Damage accumulation injects into brick collision detection
 	Deus.inject_pipeline(BallDamagePipeline, Callable(BrickCollisionPipeline, "_stage_collide"), false)
