@@ -16,7 +16,7 @@ func _ready():
 			Deus.component_registry.node_components.erase(node)
 
 	# Scheduled pipelines (run every frame)
-	for pipeline in [TouchZoneInputPipeline, PaddleInputPipeline, TouchPaddleInputPipeline, MovementPipeline, PositionClampPipeline, BallMovementPipeline, WallReflectionPipeline, DamagePipeline, DestructionPipeline, BrickVisualSyncPipeline, BallMissedPipeline, PausePipeline, HUDSyncPipeline, OverlaySyncPipeline]:
+	for pipeline in [TouchZoneInputPipeline, PaddleInputPipeline, TouchPaddleInputPipeline, MovementPipeline, PositionClampPipeline, BallMovementPipeline, WallReflectionPipeline, DamagePipeline, DestructionPipeline, BrickVisualSyncPipeline, BallMissedPipeline, PausePipeline, HUDSyncPipeline, OverlaySyncPipeline, ScreenShakePipeline]:
 		Deus.register_pipeline(pipeline)
 		Deus.pipeline_scheduler.register_task(
 			PipelineSchedulerDefaults.OnUpdate, pipeline
@@ -29,6 +29,7 @@ func _ready():
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(BallMovementPipeline, "_stage_move"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(WallReflectionPipeline, "_stage_reflect"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(BallMissedPipeline, "_stage_detect"), true)
+	Deus.inject_pipeline(PauseGuardPipeline, Callable(ScreenShakePipeline, "_stage_apply"), true)
 
 	# Scoring + win check inject before destruction — components still available
 	Deus.inject_pipeline(ScoringPipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
