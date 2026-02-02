@@ -16,3 +16,5 @@ script = ExtResource("1_main")
 [node name="HUD" parent="." unique_id=1343528118 instance=ExtResource("4_hud")]
 
 [node name="TouchControls" parent="." unique_id=1264324424 instance=ExtResource("5_touch")]
+
+[node name="Camera2D" type="Camera2D" parent="."]

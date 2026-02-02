@@ -46,6 +46,7 @@ func _ready():
 	Deus.set_component(Deus, Score, Score.new())
 	Deus.set_component(Deus, Lives, Lives.new())
 	Deus.set_component(Deus, GameState, GameState.new())
+	Deus.set_component(Deus, ScreenShake, ScreenShake.new())
 
 	# Spawn brick grid
 	Deus.register_pipeline(SpawnBricksPipeline)
