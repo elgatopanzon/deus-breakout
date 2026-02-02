@@ -18,3 +18,12 @@ static func _stage_sync(context):
 	var lives_label = context.world.try_get_node("hud_lives")
 	if lives_label:
 		lives_label.text = "Lives: %d" % lives.value
+
+	var combo = context.world.get_component(context.world, Combo)
+	var combo_label = context.world.try_get_node("hud_combo")
+	if combo_label and combo:
+		if combo.count > 0:
+			combo_label.text = "Combo: %dx" % combo.count
+			combo_label.visible = true
+		else:
+			combo_label.visible = false

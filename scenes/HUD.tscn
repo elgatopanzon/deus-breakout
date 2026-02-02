@@ -35,6 +35,19 @@ text = "Score: 0"
 script = ExtResource("1_deus_cfg")
 node_id = "hud_score"
 
+[node name="ComboLabel" type="Label" parent="Root" groups=["hud_combo"]]
+visible = false
+layout_mode = 1
+offset_left = 10.0
+offset_top = 40.0
+offset_right = 200.0
+offset_bottom = 65.0
+theme_override_font_sizes/font_size = 18
+
+[node name="DeusConfiguration" type="Node" parent="Root/ComboLabel"]
+script = ExtResource("1_deus_cfg")
+node_id = "hud_combo"
+
 [node name="LivesLabel" type="Label" parent="Root" unique_id=809007888 groups=["hud_lives"]]
 layout_mode = 1
 anchors_preset = 1

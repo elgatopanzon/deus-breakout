@@ -17,5 +17,7 @@ static func _stage_score(context):
 	if score == null:
 		return
 
-	score.value += points
+	var combo = context.world.get_component(context.world, Combo)
+	var multiplier = combo.multiplier if combo else 1.0
+	score.value += int(points * multiplier)
 	context.world.set_component(context.world, Score, score)
