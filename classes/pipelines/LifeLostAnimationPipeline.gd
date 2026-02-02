@@ -29,9 +29,19 @@ static func _stage_animate(context):
 	var ball = context._node
 	var scene_root = ball.get_parent()
 	var target_y = ball.position.y
+	var registry = world.component_registry
+
+	# Gate gameplay pipelines during animation by switching to STARTING state
+	var gs = world.get_component(world, GameState)
+	if gs:
+		gs.state = GameState.State.STARTING
+		world.set_component(world, GameState, gs)
 
 	# Move ball above viewport for drop-in after freeze
 	ball.position.y = -40.0
+	# Disable collision during drop-in to prevent false area_entered signals
+	ball.monitoring = false
+	ball.monitorable = false
 
 	# Freeze gameplay briefly
 	Engine.time_scale = 0.0
@@ -52,6 +62,18 @@ static func _stage_animate(context):
 			.set_trans(Tween.TRANS_BACK)
 
 		flash_tween.tween_callback(func():
+			# Re-enable collision and sync ECS Position with final node position
+			ball.monitoring = true
+			ball.monitorable = true
+			var pos_comp = registry.get_component(ball, "Position")
+			if pos_comp:
+				pos_comp.value = ball.position
+				world.set_component(ball, Position, pos_comp)
+			# Restore PLAYING state so gameplay resumes
+			var gs2 = world.get_component(world, GameState)
+			if gs2:
+				gs2.state = GameState.State.PLAYING
+				world.set_component(world, GameState, gs2)
 			var as_ = world.get_component(world, AnimationState)
 			if as_:
 				as_.transitioning = false
