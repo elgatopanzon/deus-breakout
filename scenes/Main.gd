@@ -53,8 +53,11 @@ func _ready():
 	# Game state singletons on world node
 	Deus.set_component(Deus, Score, Score.new())
 	Deus.set_component(Deus, Lives, Lives.new())
-	Deus.set_component(Deus, GameState, GameState.new())
+	var gs = GameState.new()
+	gs.state = GameState.State.PLAYING  # override STARTING default until LevelStartAnimationPipeline exists
+	Deus.set_component(Deus, GameState, gs)
 	Deus.set_component(Deus, ScreenShake, ScreenShake.new())
+	Deus.set_component(Deus, AnimationState, AnimationState.new())
 
 	# Spawn brick grid
 	Deus.register_pipeline(SpawnBricksPipeline)

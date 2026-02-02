@@ -3,6 +3,6 @@
 
 class_name GameState extends DefaultComponent
 
-enum State { PLAYING, PAUSED, WON, LOST }
+enum State { STARTING, PLAYING, PAUSED, WON, LOST }
 
-@export var state: int = State.PLAYING
+@export var state: int = State.STARTING
