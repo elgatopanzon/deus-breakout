@@ -46,6 +46,7 @@ func _ready():
 	Deus.inject_pipeline(LivesDecrementPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
 	Deus.inject_pipeline(GameOverPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
 	Deus.inject_pipeline(BallRespawnPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
+	Deus.inject_pipeline(LifeLostAnimationPipeline, Callable(BallRespawnPipeline, "_stage_respawn"), false)
 
 	# Damage accumulation injects into brick collision detection
 	Deus.inject_pipeline(BallDamagePipeline, Callable(BrickCollisionPipeline, "_stage_collide"), false)
