@@ -31,6 +31,10 @@ func _ready():
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(BallMissedPipeline, "_stage_detect"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(ScreenShakePipeline, "_stage_apply"), true)
 
+	# Shake trigger injects after damage (hit) and before destruction (destroy)
+	Deus.inject_pipeline(ShakeTriggerPipeline, Callable(DamagePipeline, "_stage_apply"), false)
+	Deus.inject_pipeline(ShakeTriggerPipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
+
 	# Scoring + win check inject before destruction — components still available
 	Deus.inject_pipeline(ScoringPipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
 	Deus.inject_pipeline(WinCheckPipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
