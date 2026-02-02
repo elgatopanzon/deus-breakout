@@ -34,9 +34,11 @@ func _ready():
 	# Shake trigger injects before damage — reads pending Damage to detect hits this frame
 	Deus.inject_pipeline(ShakeTriggerPipeline, Callable(DamagePipeline, "_stage_apply"), true)
 
-	# Scoring + win check inject before destruction — components still available
+	# Scoring + win check + particle effects inject before destruction — components still available
 	Deus.inject_pipeline(ScoringPipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
 	Deus.inject_pipeline(WinCheckPipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
+	Deus.inject_pipeline(BrickDestructionParticlePipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
+	Deus.inject_pipeline(PauseGuardPipeline, Callable(BrickDestructionParticlePipeline, "_stage_spawn"), true)
 
 	# Lives + game over + respawn inject into ball-missed detection pipeline
 	Deus.inject_pipeline(LivesDecrementPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
