@@ -31,6 +31,10 @@ Deus="*uid://c3lfx3rk552nn"
 
 enabled=PackedStringArray("res://addons/deus/plugin.cfg")
 
+[debug]
+
+settings/stdout/print_fps=true
+
 [rendering]
 
 textures/vram_compression/import_etc2_astc=true
