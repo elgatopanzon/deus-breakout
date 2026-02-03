@@ -22,7 +22,7 @@ static func generate(level: int, viewport_size: Vector2) -> BrickLayout:
 	var rng = RandomNumberGenerator.new()
 	rng.seed = hash(level)
 
-	var pattern_index = level % PATTERN_COUNT
+	var pattern_index = (level - 1) % PATTERN_COUNT
 	var grid = _generate_pattern(pattern_index, cols, rows, rng)
 	_apply_symmetry(grid, cols)
 
