@@ -2,7 +2,7 @@
 
 [sub_resource type="Gradient" id="Gradient_spark_color"]
 offsets = PackedFloat32Array(0.0, 0.5, 1.0)
-colors = PackedColorArray(1, 1, 1, 1, 0.8, 0.8, 0.8, 0.7, 0.6, 0.6, 0.6, 0)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 0.9, 0.8, 0.7, 0.7, 0.7, 0)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_spark_color"]
 gradient = SubResource("Gradient_spark_color")
@@ -20,18 +20,18 @@ angle_min = 0.0
 angle_max = 360.0
 angle_velocity_min = -3.0
 angle_velocity_max = 3.0
-scale_min = 1.0
-scale_max = 2.0
+scale_min = 1.5
+scale_max = 3.0
 color = Color(1, 1, 1, 1)
 color_ramp = SubResource("GradientTexture1D_spark_color")
 
 [sub_resource type="QuadMesh" id="QuadMesh_spark"]
-size = Vector2(6, 6)
+size = Vector2(10, 10)
 
 [node name="BallSpark" type="GPUParticles2D"]
 emitting = false
-amount = 8
-lifetime = 0.15
+amount = 16
+lifetime = 0.3
 one_shot = true
 process_material = SubResource("ParticleProcessMaterial_spark")
 mesh = SubResource("QuadMesh_spark")

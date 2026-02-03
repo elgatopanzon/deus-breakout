@@ -3,8 +3,8 @@
 
 class_name ImpactBurstPipeline extends DefaultPipeline
 
-const BURST_SIZE := Vector2(16, 16)
-const FADE_DURATION := 0.15
+const BURST_SIZE := Vector2(24, 24)
+const FADE_DURATION := 0.2
 
 static func _requires(): return []
 
