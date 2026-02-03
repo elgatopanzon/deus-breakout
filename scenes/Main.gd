@@ -113,7 +113,7 @@ func _ready():
 	# Paddle stretch and brick squeeze deformation
 	Deus.inject_pipeline(PaddleStretchPipeline, Callable(DeflectPipeline, "_stage_deflect"), false)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(PaddleStretchPipeline, "_stage_stretch"), true)
-	Deus.inject_pipeline(BrickSqueezePipeline, Callable(DamagePipeline, "_stage_apply"), false)
+	Deus.inject_pipeline(BrickSqueezePipeline, Callable(DamagePipeline, "_stage_apply"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(BrickSqueezePipeline, "_stage_squeeze"), true)
 
 	# Wall and paddle spark particles + sound
