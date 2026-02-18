@@ -22,4 +22,4 @@ static func _stage_sync(context):
 	var visual = context._node.get_node_or_null("Visual")
 	if visual == null:
 		return
-	visual.color = color_for_health(context.Health.value)
+	visual.color = color_for_health(context.ReadOnlyHealth.value)

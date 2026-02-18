@@ -7,11 +7,11 @@ static func _requires(): return [Health, Damage]
 
 static func _stage_squeeze(context):
 	# Only squeeze if damage is pending (runs before DamagePipeline._stage_apply)
-	if context.Damage.value <= 0:
+	if context.ReadOnlyDamage.value <= 0:
 		return
 
 	# Only squeeze if brick will survive the hit
-	if context.Health.value - context.Damage.value <= 0:
+	if context.ReadOnlyHealth.value - context.ReadOnlyDamage.value <= 0:
 		return
 
 	var visual = context._node.get_node_or_null("Visual")

@@ -10,11 +10,11 @@ static func _requires(): return [Health]
 
 static func _stage_spawn(context):
 	# Only run if brick is being destroyed (Health <= 0)
-	if context.Health.value > 0:
+	if context.ReadOnlyHealth.value > 0:
 		return
 
 	var brick_pos = context._node.position + context._node.get_meta("size", Vector2(0, 0)) / 2.0
-	var health_color = BrickVisualSyncPipeline.color_for_health(context.Health.value)
+	var health_color = BrickVisualSyncPipeline.color_for_health(context.ReadOnlyHealth.value)
 
 	# Spawn brick debris
 	var debris = BRICK_DEBRIS.instantiate()

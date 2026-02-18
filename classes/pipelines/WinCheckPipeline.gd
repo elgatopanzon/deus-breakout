@@ -9,7 +9,7 @@ static var _brick_cache_count: int = -1
 static func _requires(): return []
 
 static func _stage_check(context):
-	if context.Health.value > 0:
+	if context.ReadOnlyHealth.value > 0:
 		return
 
 	# Re-query when cache is empty or count may have changed (brick destroyed)

@@ -7,11 +7,11 @@ static func _requires(): return []
 
 static func _stage_play(context):
 	# Only fire on frames where damage is pending (before DamagePipeline drains it)
-	if context.Damage.value <= 0:
+	if context.ReadOnlyDamage.value <= 0:
 		return
 
 	# Predict outcome: will this brick be destroyed?
-	if context.Health.value - context.Damage.value > 0:
+	if context.ReadOnlyHealth.value - context.ReadOnlyDamage.value > 0:
 		return
 
 	var sb = context.world.get_component(context.world, SoundBank)

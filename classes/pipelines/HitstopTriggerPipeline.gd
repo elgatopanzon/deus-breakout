@@ -6,7 +6,7 @@ class_name HitstopTriggerPipeline extends DefaultPipeline
 static func _requires(): return [Health]
 
 static func _stage_trigger(context):
-	if context.Health.value > 0:
+	if context.ReadOnlyHealth.value > 0:
 		return
 
 	var hitstop = context.world.get_component(context.world, Hitstop)
