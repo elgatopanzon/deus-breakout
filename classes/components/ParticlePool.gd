@@ -31,6 +31,7 @@ func acquire(scene: PackedScene) -> GPUParticles2D:
 			var entry = pool[i]
 			if is_instance_valid(entry) and not entry.visible:
 				entry.visible = true
+				entry.restart()
 				entry.set_meta("pool_epoch", entry.get_meta("pool_epoch", 0) + 1)
 				return entry
 	# Pool exhausted -- fallback instantiation
