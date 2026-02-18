@@ -18,10 +18,8 @@ static func _stage_destroy(context):
 		if tween and tween.is_valid():
 			tween.kill()
 
-	# Remove components (duplicate avoids mutate-during-iterate in remove_all_components)
-	if reg.node_components.has(node):
-		for comp_name in reg.node_components[node].duplicate():
-			reg.remove_component(node, comp_name)
+	# Batch-remove all components with single cache invalidation
+	reg.remove_all_components(node)
 	# Cancel result so PipelineManager doesn't re-commit cached components
 	context.result.cancel("entity destroyed")
 	node.queue_free()
