@@ -1,5 +1,5 @@
 # ABOUTME: Animates win state -- remaining bricks explode outward, overlay scales in
-# ABOUTME: Oneshot pipeline injected after WinCheckPipeline; fires once on WON then deregisters
+# ABOUTME: Injected after WinCheckPipeline; self-deregisters on first WON trigger
 
 class_name WinAnimationPipeline extends DefaultPipeline
 
@@ -11,8 +11,10 @@ static func _requires(): return []
 static func _stage_animate(context):
 	var gs = context.world.get_component(context.world, GameState)
 	if gs == null or gs.state != GameState.State.WON:
-		context.result.cancel("not won")
 		return
+
+	# Self-deregister so animation fires only once
+	context.world.pipeline_manager.deregister_pipeline(WinAnimationPipeline)
 
 	var world = context.world
 	var vp = context._node.get_viewport().get_visible_rect().size

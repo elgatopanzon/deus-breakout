@@ -1,5 +1,5 @@
 # ABOUTME: Animates game over state -- overlay fades/scales in smoothly
-# ABOUTME: Oneshot injected after GameOverPipeline; deregisters after firing once
+# ABOUTME: Injected after GameOverPipeline; self-deregisters on first LOST trigger
 
 class_name GameOverAnimationPipeline extends DefaultPipeline
 
@@ -11,6 +11,9 @@ static func _stage_animate(context):
 	var gs = context.world.get_component(context.world, GameState)
 	if gs == null or gs.state != GameState.State.LOST:
 		return
+
+	# Self-deregister so animation fires only once
+	context.world.pipeline_manager.deregister_pipeline(GameOverAnimationPipeline)
 
 	var world = context.world
 

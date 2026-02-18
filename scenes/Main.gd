@@ -79,7 +79,7 @@ func _ready():
 	# Scoring + win check + particle effects inject before destruction — components still available
 	Deus.inject_pipeline(ScoringPipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
 	Deus.inject_pipeline(WinCheckPipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
-	Deus.register_oneshot_pipeline(WinAnimationPipeline, [PipelineResult.SUCCESS] as Array[String])
+	Deus.register_pipeline(WinAnimationPipeline)
 	Deus.inject_pipeline(WinAnimationPipeline, Callable(WinCheckPipeline, "_stage_check"), false)
 	Deus.inject_pipeline(BrickDestructionParticlePipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(BrickDestructionParticlePipeline, "_stage_spawn"), true)
@@ -89,7 +89,7 @@ func _ready():
 	Deus.inject_pipeline(LifeLostSoundPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
 	Deus.inject_pipeline(LivesDecrementPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
 	Deus.inject_pipeline(GameOverPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
-	Deus.register_oneshot_pipeline(GameOverAnimationPipeline, [PipelineResult.SUCCESS] as Array[String])
+	Deus.register_pipeline(GameOverAnimationPipeline)
 	Deus.inject_pipeline(GameOverAnimationPipeline, Callable(GameOverPipeline, "_stage_check"), false)
 	Deus.inject_pipeline(BallRespawnPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
 	Deus.inject_pipeline(LifeLostAnimationPipeline, Callable(BallRespawnPipeline, "_stage_respawn"), false)
