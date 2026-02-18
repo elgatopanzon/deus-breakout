@@ -140,6 +140,13 @@ func _ready():
 	Deus.set_component(Deus, Hitstop, Hitstop.new())
 	Deus.set_component(Deus, Level, Level.new())
 
+	# Particle pool: pre-allocate GPU particle nodes for reuse across pipelines
+	var pp = ParticlePool.new()
+	pp.preallocate(preload("res://scenes/effects/BallSpark.tscn"), self, 8)
+	pp.preallocate(preload("res://scenes/effects/BrickDebris.tscn"), self, 8)
+	pp.preallocate(preload("res://scenes/effects/DustPuff.tscn"), self, 8)
+	Deus.set_component(Deus, ParticlePool, pp)
+
 	# Audio: preload streams into SoundBank singleton
 	var sb = SoundBank.new()
 	sb.streams = {
