@@ -1,20 +1,16 @@
 # ABOUTME: Animates game over state -- overlay fades/scales in smoothly
-# ABOUTME: Scheduled pipeline; triggers once on GameState.LOST
+# ABOUTME: Oneshot injected after GameOverPipeline; deregisters after firing once
 
 class_name GameOverAnimationPipeline extends DefaultPipeline
 
 const FADE_DURATION = 0.3
 
-static var played: bool = false
-
-static func _requires(): return [GameState]
+static func _requires(): return []
 
 static func _stage_animate(context):
-	if context.GameState.state != GameState.State.LOST:
+	var gs = context.world.get_component(context.world, GameState)
+	if gs == null or gs.state != GameState.State.LOST:
 		return
-	if played:
-		return
-	played = true
 
 	var world = context.world
 

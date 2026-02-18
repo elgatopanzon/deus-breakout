@@ -1,21 +1,17 @@
 # ABOUTME: Animates win state -- remaining bricks explode outward, overlay scales in
-# ABOUTME: Scheduled pipeline; triggers once on GameState.WON with overshoot easing
+# ABOUTME: Oneshot pipeline injected after WinCheckPipeline; fires once on WON then deregisters
 
 class_name WinAnimationPipeline extends DefaultPipeline
 
 const BRICK_FLY_DURATION = 0.5
 const OVERLAY_SCALE_DURATION = 0.4
 
-static var played: bool = false
-
 static func _requires(): return [GameState]
 
 static func _stage_animate(context):
 	if context.GameState.state != GameState.State.WON:
+		context.result.cancel("not won")
 		return
-	if played:
-		return
-	played = true
 
 	var world = context.world
 	var vp = context._node.get_viewport().get_visible_rect().size

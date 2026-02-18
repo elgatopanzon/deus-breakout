@@ -15,10 +15,7 @@ func _ready():
 		if not is_instance_valid(node):
 			Deus.component_registry.node_components.erase(node)
 
-	# Reset one-shot animation flags and state tracking (statics persist across scene reloads)
-	WinAnimationPipeline.played = false
-	GameOverAnimationPipeline.played = false
-	GameStateSoundPipeline.previous_state = GameState.State.STARTING
+	# Reset state tracking (statics persist across scene reloads)
 	WallBounceSoundPipeline.last_played_frame = -1
 	PaddleHitSoundPipeline.last_played_frame = -1
 	AudioPoolHelper.reset()
@@ -43,12 +40,8 @@ func _ready():
 	var effects_pipelines = [
 		PausePipeline,
 		HUDSyncPipeline,
-		OverlaySyncPipeline,
 		ScreenShakePipeline,
 		ComboDecayPipeline,
-		WinAnimationPipeline,
-		GameOverAnimationPipeline,
-		GameStateSoundPipeline,
 	]
 	for p in input_pipelines:
 		Deus.register_pipeline(p)
@@ -86,6 +79,8 @@ func _ready():
 	# Scoring + win check + particle effects inject before destruction — components still available
 	Deus.inject_pipeline(ScoringPipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
 	Deus.inject_pipeline(WinCheckPipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
+	Deus.register_oneshot_pipeline(WinAnimationPipeline, [PipelineResult.SUCCESS] as Array[String])
+	Deus.inject_pipeline(WinAnimationPipeline, Callable(WinCheckPipeline, "_stage_check"), false)
 	Deus.inject_pipeline(BrickDestructionParticlePipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(BrickDestructionParticlePipeline, "_stage_spawn"), true)
 	Deus.inject_pipeline(HitstopTriggerPipeline, Callable(DestructionPipeline, "_stage_destroy"), true)
@@ -94,10 +89,23 @@ func _ready():
 	Deus.inject_pipeline(LifeLostSoundPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
 	Deus.inject_pipeline(LivesDecrementPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
 	Deus.inject_pipeline(GameOverPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
+	Deus.register_oneshot_pipeline(GameOverAnimationPipeline, [PipelineResult.SUCCESS] as Array[String])
+	Deus.inject_pipeline(GameOverAnimationPipeline, Callable(GameOverPipeline, "_stage_check"), false)
 	Deus.inject_pipeline(BallRespawnPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)
 	Deus.inject_pipeline(LifeLostAnimationPipeline, Callable(BallRespawnPipeline, "_stage_respawn"), false)
 	Deus.inject_pipeline(BallSpeedResetPipeline, Callable(BallRespawnPipeline, "_stage_respawn"), false)
 	Deus.inject_pipeline(BallLaunchSoundPipeline, Callable(BallRespawnPipeline, "_stage_respawn"), false)
+
+	# OverlaySyncPipeline is event-driven -- fires on GameState component_set signal
+	Deus.register_pipeline(OverlaySyncPipeline)
+	# GameStateSoundPipeline is event-driven -- fires on GameState component_set signal
+	Deus.register_pipeline(GameStateSoundPipeline)
+	Deus.component_registry.component_set.connect(
+		func(node, _eid, comp_name, _comp):
+			if comp_name == "GameState":
+				Deus.execute_pipeline(OverlaySyncPipeline, node)
+				Deus.execute_pipeline(GameStateSoundPipeline, node)
+	)
 
 	# DamagePipeline and DestructionPipeline are event-driven -- not scheduled, only fire on collision
 	Deus.register_pipeline(DamagePipeline)

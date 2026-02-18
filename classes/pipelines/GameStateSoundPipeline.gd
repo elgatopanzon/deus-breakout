@@ -1,23 +1,19 @@
 # ABOUTME: Plays game over and win sounds on GameState transitions
-# ABOUTME: Scheduled pipeline with previous_state tracking for debounce
+# ABOUTME: Event-driven via component_set signal; fires only when GameState changes
 
 class_name GameStateSoundPipeline extends DefaultPipeline
 
-static var previous_state: int = GameState.State.STARTING
+static func _requires(): return []
 
-static func _requires(): return [GameState]
-
-static func _stage_check(context):
-	var current = context.GameState.state
-	if current == previous_state:
+static func _stage_play(context):
+	var gs = context.world.get_component(context.world, GameState)
+	if gs == null:
 		return
 
-	previous_state = current
-
 	var sound_id = ""
-	if current == GameState.State.LOST:
+	if gs.state == GameState.State.LOST:
 		sound_id = "game_over"
-	elif current == GameState.State.WON:
+	elif gs.state == GameState.State.WON:
 		sound_id = "win"
 
 	if sound_id.is_empty():

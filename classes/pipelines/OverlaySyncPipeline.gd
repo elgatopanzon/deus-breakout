@@ -1,12 +1,15 @@
 # ABOUTME: Overlay sync pipeline — shows/hides game state overlays based on GameState
-# ABOUTME: Scheduled pipeline; requires GameState so it runs on the Deus node
+# ABOUTME: Event-driven via component_set signal; fires only when GameState changes
 
 class_name OverlaySyncPipeline extends DefaultPipeline
 
-static func _requires(): return [GameState]
+static func _requires(): return []
 
 static func _stage_sync(context):
-	var state = context.GameState.state
+	var gs = context.world.get_component(context.world, GameState)
+	if gs == null:
+		return
+	var state = gs.state
 
 	var game_overlay = context.world.try_get_node("game_overlay")
 	var pause_overlay = context.world.try_get_node("pause_overlay")
