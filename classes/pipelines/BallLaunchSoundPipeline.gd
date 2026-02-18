@@ -18,8 +18,4 @@ static func _stage_play(context):
 	if pool == null:
 		return
 
-	for player in pool.get_children():
-		if not player.playing:
-			player.stream = sb.streams["ball_launch"]
-			player.play()
-			return
+	AudioPoolHelper.play(pool, sb.streams["ball_launch"])

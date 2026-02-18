@@ -32,8 +32,4 @@ static func _stage_play(context):
 	if pool == null:
 		return
 
-	for player in pool.get_children():
-		if not player.playing:
-			player.stream = sb.streams["wall_bounce"]
-			player.play()
-			return
+	AudioPoolHelper.play(pool, sb.streams["wall_bounce"])

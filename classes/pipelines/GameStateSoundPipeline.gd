@@ -31,8 +31,4 @@ static func _stage_check(context):
 	if pool == null:
 		return
 
-	for player in pool.get_children():
-		if not player.playing:
-			player.stream = sb.streams[sound_id]
-			player.play()
-			return
+	AudioPoolHelper.play(pool, sb.streams[sound_id])
