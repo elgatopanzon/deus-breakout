@@ -3,11 +3,14 @@
 
 class_name TouchPaddleInputPipeline extends DefaultPipeline
 
+static var _touch_zone_cache: Array = []
+
 static func _requires(): return [InputIntent]
 
 static func _stage_read_touch(context):
-	var touch_nodes = context.world.component_registry.get_matching_nodes([TouchZone], [])
-	for node in touch_nodes:
+	if _touch_zone_cache.is_empty():
+		_touch_zone_cache = context.world.component_registry.get_matching_nodes([TouchZone], [])
+	for node in _touch_zone_cache:
 		var zone = context.world.get_component(node, TouchZone)
 		if zone.pressed:
 			context.InputIntent.direction = zone.direction

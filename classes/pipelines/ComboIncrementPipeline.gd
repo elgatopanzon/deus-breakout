@@ -3,6 +3,14 @@
 
 class_name ComboIncrementPipeline extends DefaultPipeline
 
+# Pre-sorted tier keys cached to avoid sorting on every brick hit
+static var _sorted_tier_keys: Array = _init_sorted_keys()
+
+static func _init_sorted_keys() -> Array:
+	var keys = ComboTiers.new().tiers.keys()
+	keys.sort()
+	return keys
+
 static func _requires(): return []
 
 static func _stage_increment(context):
@@ -18,9 +26,7 @@ static func _stage_increment(context):
 	# Look up multiplier from highest tier threshold <= count
 	if tiers:
 		combo.multiplier = 1.0
-		var keys = tiers.tiers.keys()
-		keys.sort()
-		for threshold in keys:
+		for threshold in _sorted_tier_keys:
 			if combo.count >= threshold:
 				combo.multiplier = tiers.tiers[threshold]
 
