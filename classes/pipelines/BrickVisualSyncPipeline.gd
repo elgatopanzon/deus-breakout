@@ -1,4 +1,4 @@
-# ABOUTME: Syncs brick visual color from current Health value each frame
+# ABOUTME: Syncs brick visual color when Health changes (injected after DamagePipeline)
 # ABOUTME: Maps HP tiers to colors for visual damage feedback
 
 class_name BrickVisualSyncPipeline extends DefaultPipeline
@@ -17,9 +17,12 @@ static func color_for_health(hp: int) -> Color:
 	return HEALTH_COLORS[1]
 
 static func _stage_sync(context):
+	# Skip when no damage was pending (DamagePipeline already drained Damage to 0)
+	if context.ReadOnlyDamage.value <= 0:
+		return
 	if context._node.get_meta("id") != "brick":
 		return
 	var visual = context._node.get_node_or_null("Visual")
 	if visual == null:
 		return
-	visual.color = color_for_health(context.ReadOnlyHealth.value)
+	visual.color = color_for_health(context.Health.value)

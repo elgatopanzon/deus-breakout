@@ -43,7 +43,6 @@ func _ready():
 		BallMissedPipeline,
 	]
 	var effects_pipelines = [
-		BrickVisualSyncPipeline,
 		PausePipeline,
 		HUDSyncPipeline,
 		OverlaySyncPipeline,
@@ -75,6 +74,9 @@ func _ready():
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(BallMissedPipeline, "_stage_detect"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(ScreenShakePipeline, "_stage_apply"), true)
 	Deus.inject_pipeline(PauseGuardPipeline, Callable(ComboDecayPipeline, "_stage_decay"), true)
+
+	# Visual sync injects after damage — reacts to health changes instead of running per-frame
+	Deus.inject_pipeline(BrickVisualSyncPipeline, Callable(DamagePipeline, "_stage_apply"), false)
 
 	# Shake trigger + brick sounds inject before damage — read pending Damage to detect hits
 	Deus.inject_pipeline(ShakeTriggerPipeline, Callable(DamagePipeline, "_stage_apply"), true)
