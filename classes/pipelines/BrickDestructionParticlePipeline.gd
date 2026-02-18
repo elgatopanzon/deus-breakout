@@ -16,19 +16,19 @@ static func _stage_spawn(context):
 	var brick_pos = context._node.position + context._node.get_meta("size", Vector2(0, 0)) / 2.0
 	var health_color = BrickVisualSyncPipeline.color_for_health(context.Health.value)
 
-	var pool = context.world.component_registry.get_component(context.world, "ParticlePool")
-
-	# Spawn brick debris from pool
-	var debris = pool.acquire(BRICK_DEBRIS)
+	# Spawn brick debris
+	var debris = BRICK_DEBRIS.instantiate()
 	debris.position = brick_pos
 	if debris.process_material:
 		debris.process_material = debris.process_material.duplicate()
 		debris.process_material.color = health_color
+	context._node.get_parent().add_child(debris)
 	debris.emitting = true
-	pool.release_after(debris, debris.lifetime + 0.1)
+	debris.get_tree().create_timer(debris.lifetime + 0.1).timeout.connect(debris.queue_free)
 
-	# Spawn dust puff from pool
-	var dust = pool.acquire(DUST_PUFF)
+	# Spawn dust puff
+	var dust = DUST_PUFF.instantiate()
 	dust.position = brick_pos
+	context._node.get_parent().add_child(dust)
 	dust.emitting = true
-	pool.release_after(dust, dust.lifetime + 0.1)
+	dust.get_tree().create_timer(dust.lifetime + 0.1).timeout.connect(dust.queue_free)

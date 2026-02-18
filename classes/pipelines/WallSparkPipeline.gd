@@ -30,8 +30,8 @@ static func _stage_spark(context):
 	if not hit:
 		return
 
-	var pool = context.world.component_registry.get_component(context.world, "ParticlePool")
-	var spark = pool.acquire(BALL_SPARK)
+	var spark = BALL_SPARK.instantiate()
 	spark.position = contact_pos
+	context._node.get_parent().add_child(spark)
 	spark.emitting = true
-	pool.release_after(spark, spark.lifetime + 0.1)
+	spark.get_tree().create_timer(spark.lifetime + 0.1).timeout.connect(spark.queue_free)
