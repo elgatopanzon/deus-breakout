@@ -1,15 +1,25 @@
-######################################################################
-# @author      : ElGatoPanzon
-# @class       : BallCollisionPipeline
-# @created     : Friday Jan 31, 2026 00:00:00 CST
-# @copyright   : Copyright (c) ElGatoPanzon 2026
-#
-# @description : reflects ball velocity on any area collision
-######################################################################
+# ABOUTME: Reflects ball velocity on any area collision using surface normals
+# ABOUTME: Caches collision shape lookups per entity to avoid repeated get_node_or_null calls
 
 class_name BallCollisionPipeline extends DefaultPipeline
 
+# Cache collision shape lookups keyed by node instance_id
+static var _shape_cache: Dictionary = {}
+
 static func _requires(): return [Position, Velocity]
+
+# Look up and cache the CollisionShape2D child for a given node
+static func _get_cached_shape(node: Node) -> CollisionShape2D:
+	var id = node.get_instance_id()
+	if _shape_cache.has(id):
+		var cached = _shape_cache[id]
+		if is_instance_valid(cached):
+			return cached
+		_shape_cache.erase(id)
+	var shape = node.get_node_or_null("CollisionShape2D")
+	if shape != null:
+		_shape_cache[id] = shape
+	return shape
 
 static func _stage_reflect(context):
 	var payload = context.payload
@@ -19,9 +29,9 @@ static func _stage_reflect(context):
 	var other = payload[1]
 	var other_node = other if other.has_meta("id") else other.get_parent()
 
-	# Get collision shapes for normal derivation
-	var ball_col = context._node.get_node_or_null("CollisionShape2D")
-	var other_col = other_node.get_node_or_null("CollisionShape2D")
+	# Get collision shapes for normal derivation (cached)
+	var ball_col = _get_cached_shape(context._node)
+	var other_col = _get_cached_shape(other_node)
 	if ball_col == null or other_col == null:
 		return
 
