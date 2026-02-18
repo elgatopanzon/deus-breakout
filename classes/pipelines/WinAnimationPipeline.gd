@@ -17,15 +17,16 @@ static func _stage_animate(context):
 	context.world.pipeline_manager.deregister_pipeline(WinAnimationPipeline)
 
 	var world = context.world
-	var vp = context._node.get_viewport().get_visible_rect().size
+	var vp = world.get_viewport().get_visible_rect().size
 	var center = vp * 0.5
 
 	# Explode remaining bricks outward from center
+	# Use world node for tweens -- context._node is the dying brick (queue_free'd by DestructionPipeline)
 	var bricks = world.component_registry.get_matching_nodes([Health], [])
 	for brick in bricks:
 		var dir = (brick.position - center).normalized()
 		var target = brick.position + dir * 600.0
-		var brick_tween = context._node.create_tween()
+		var brick_tween = world.create_tween()
 		brick_tween.set_parallel(true)
 		brick_tween.tween_property(brick, "position", target, BRICK_FLY_DURATION) \
 			.set_ease(Tween.EASE_IN) \
@@ -38,7 +39,7 @@ static func _stage_animate(context):
 	if overlay:
 		overlay.pivot_offset = overlay.size * 0.5
 		overlay.scale = Vector2.ZERO
-		var overlay_tween = context._node.create_tween()
+		var overlay_tween = world.create_tween()
 		overlay_tween.tween_interval(0.15)
 		overlay_tween.tween_property(overlay, "scale", Vector2.ONE, OVERLAY_SCALE_DURATION) \
 			.set_ease(Tween.EASE_OUT) \
