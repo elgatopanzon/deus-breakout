@@ -6,7 +6,7 @@ class_name ScoringPipeline extends DefaultPipeline
 static func _requires(): return []
 
 static func _stage_score(context):
-	if context.ReadOnlyHealth.value > 0:
+	if context.Health.value > 0:
 		return
 
 	var points = context._node.get_meta("points", 0)

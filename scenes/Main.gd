@@ -38,8 +38,6 @@ func _ready():
 		BallMovementPipeline,
 		BallSpeedCurvePipeline,
 		WallReflectionPipeline,
-		DamagePipeline,
-		DestructionPipeline,
 		BallMissedPipeline,
 	]
 	var effects_pipelines = [
@@ -101,14 +99,25 @@ func _ready():
 	Deus.inject_pipeline(BallSpeedResetPipeline, Callable(BallRespawnPipeline, "_stage_respawn"), false)
 	Deus.inject_pipeline(BallLaunchSoundPipeline, Callable(BallRespawnPipeline, "_stage_respawn"), false)
 
+	# DamagePipeline and DestructionPipeline are event-driven -- not scheduled, only fire on collision
+	Deus.register_pipeline(DamagePipeline)
+	Deus.register_pipeline(DestructionPipeline)
+
 	# Damage accumulation injects into brick collision detection
 	Deus.inject_pipeline(BallDamagePipeline, Callable(BrickCollisionPipeline, "_stage_collide"), false)
 
-	# Visual effects inject after damage accumulation in collision chain
+	# Visual effects run after damage is accumulated but before it is applied
+	# (effects read pending Damage.value > 0 to detect hits)
 	Deus.inject_pipeline(HitFlashPipeline, Callable(BrickCollisionPipeline, "_stage_collide"), false)
 	Deus.inject_pipeline(ImpactBurstPipeline, Callable(BrickCollisionPipeline, "_stage_collide"), false)
 	Deus.inject_pipeline(BallImpactParticlePipeline, Callable(BrickCollisionPipeline, "_stage_collide"), false)
 	Deus.inject_pipeline(ComboIncrementPipeline, Callable(BrickCollisionPipeline, "_stage_collide"), false)
+
+	# DamagePipeline fires last in collision chain -- event-driven, not per-frame
+	# Runs after all effects so they still see pending Damage.value > 0
+	Deus.inject_pipeline(DamagePipeline, Callable(BrickCollisionPipeline, "_stage_collide"), false)
+	# DestructionPipeline fires after damage is applied -- event-driven, not per-frame
+	Deus.inject_pipeline(DestructionPipeline, Callable(DamagePipeline, "_stage_apply"), false)
 
 	# Combo reset on life lost
 	Deus.inject_pipeline(ComboResetPipeline, Callable(BallMissedPipeline, "_stage_detect"), false)

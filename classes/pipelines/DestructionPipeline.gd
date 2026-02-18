@@ -1,12 +1,12 @@
 # ABOUTME: Destruction pipeline — removes entities with Health <= 0
-# ABOUTME: Scheduled after DamagePipeline; ScoringPipeline injects before _stage_destroy
+# ABOUTME: Injected after DamagePipeline._stage_apply; ScoringPipeline injects before _stage_destroy
 
 class_name DestructionPipeline extends DefaultPipeline
 
 static func _requires(): return [Health]
 
 static func _stage_destroy(context):
-	if context.ReadOnlyHealth.value > 0:
+	if context.Health.value > 0:
 		return
 	var reg = context.world.component_registry
 	var node = context._node

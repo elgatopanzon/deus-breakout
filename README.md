@@ -85,10 +85,13 @@ No code needed to set up an entity. DeusConfiguration attaches components in `_e
 for pipeline in [TouchZoneInputPipeline, PaddleInputPipeline,
     TouchPaddleInputPipeline, MovementPipeline, PositionClampPipeline,
     BallMovementPipeline, WallReflectionPipeline, DamagePipeline,
-    DestructionPipeline, BrickVisualSyncPipeline, BallMissedPipeline,
+    DestructionPipeline, BallMissedPipeline,
     PausePipeline, HUDSyncPipeline, OverlaySyncPipeline]:
     Deus.register_pipeline(pipeline)
     Deus.pipeline_scheduler.register_task(PipelineSchedulerDefaults.OnUpdate, pipeline)
+
+# Visual sync reacts to health changes instead of running per-frame
+Deus.inject_pipeline(BrickVisualSyncPipeline, Callable(DamagePipeline, "_stage_apply"), false)
 
 # Pause guard injects before gameplay pipelines — cancels when not playing
 Deus.inject_pipeline(PauseGuardPipeline, Callable(TouchZoneInputPipeline, "_stage_detect_touch"), true)

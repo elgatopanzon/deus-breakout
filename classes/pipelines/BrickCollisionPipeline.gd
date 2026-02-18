@@ -1,10 +1,10 @@
 # ABOUTME: Brick collision gate — validates area_entered is from a ball
-# ABOUTME: Signal-driven entry point; BallDamagePipeline injected after _stage_collide
+# ABOUTME: Signal-driven entry point; DamagePipeline and DestructionPipeline injected into chain
 
 class_name BrickCollisionPipeline extends DefaultPipeline
 
-# Damage required by injected BallDamagePipeline (injected stages share root context)
-static func _requires(): return [Damage]
+# Health + Damage required so injected DamagePipeline and DestructionPipeline share root context
+static func _requires(): return [Health, Damage]
 
 static func _stage_collide(context):
 	var payload = context.payload
