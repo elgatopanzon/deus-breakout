@@ -22,7 +22,6 @@ func _ready():
 	WallBounceSoundPipeline.last_played_frame = -1
 	PaddleHitSoundPipeline.last_played_frame = -1
 	AudioPoolHelper.reset()
-	ImpactBurstPipeline.reset()
 
 	# Register custom breakout phases: Input > Physics > Effects
 	BreakoutPhases.init_phases(Deus.pipeline_scheduler)
