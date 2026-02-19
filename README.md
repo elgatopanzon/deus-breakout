@@ -165,7 +165,7 @@ addons/deus/     # Godot Deus ECS framework
 - [ ] Power-ups (multi-ball, wide paddle, laser, etc.)
 
 ### Phase 4: Performance
-- [ ] Various performance optimizations (caching, pooling, etc.)
+- [x] Various performance optimizations (caching, pooling, etc.)
 
 ## Completed Work
 
