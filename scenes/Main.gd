@@ -19,6 +19,10 @@ func _ready():
 	WallBounceSoundPipeline.last_played_frame = -1
 	PaddleHitSoundPipeline.last_played_frame = -1
 	AudioPoolHelper.reset()
+	TouchPaddleInputPipeline._touch_zone_cache = []
+	WinCheckPipeline._brick_cache = []
+	WinCheckPipeline._brick_cache_count = -1
+	BallCollisionPipeline._shape_cache = {}
 
 	# Register custom breakout phases: Input > Physics > Effects
 	BreakoutPhases.init_phases(Deus.pipeline_scheduler)
