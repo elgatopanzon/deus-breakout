@@ -164,8 +164,20 @@ addons/deus/     # Godot Deus ECS framework
 - [ ] Difficulty scaling (ball speed, brick durability, paddle size)
 - [ ] Power-ups (multi-ball, wide paddle, laser, etc.)
 
+### Phase 4: Performance
+- [ ] Various performance optimizations (caching, pooling, etc.)
+
 ## Completed Work
 
+Recent fixes and improvements (February 2026):
+- **2026-02-18** - Static node cache reset on scene reload (prevents freed-instance crashes)
+- **2026-02-18** - Pass component via payload to signal-driven pipelines (avoids stale registry read)
+- **2026-02-18** - Bind WinAnimationPipeline tweens to world node instead of dying brick
+- **2026-02-18** - Convert animation pipelines from oneshot to manual deregistration
+- **2026-02-18** - WinAnimationPipeline requires [] to avoid noop-cancelling brick collision chain
+- **2026-02-18** - Event-driven pipeline conversion for scheduled pipelines (P10-G1-G4)
+
+Game mechanic implementation (January-February 2026):
 - **2026-02-02** - Sound design (9 sfx: paddle hit, brick break/hit, wall bounce, ball launch, life lost, game over, win, UI click)
 - **2026-02-02** - Custom scheduler phases (Input > Physics > Effects) replacing priority numbers
 - **2026-02-01** - Combo system with multiplier tiers and HUD display
