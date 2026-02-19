@@ -6,7 +6,8 @@ class_name OverlaySyncPipeline extends DefaultPipeline
 static func _requires(): return []
 
 static func _stage_sync(context):
-	var gs = context.world.get_component(context.world, GameState)
+	# Use payload (from component_set signal) to avoid stale registry read
+	var gs = context.payload if context.payload is GameState else context.world.get_component(context.world, GameState)
 	if gs == null:
 		return
 	var state = gs.state

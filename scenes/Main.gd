@@ -101,10 +101,10 @@ func _ready():
 	# GameStateSoundPipeline is event-driven -- fires on GameState component_set signal
 	Deus.register_pipeline(GameStateSoundPipeline)
 	Deus.component_registry.component_set.connect(
-		func(node, _eid, comp_name, _comp):
+		func(node, _eid, comp_name, comp):
 			if comp_name == "GameState":
-				Deus.execute_pipeline(OverlaySyncPipeline, node)
-				Deus.execute_pipeline(GameStateSoundPipeline, node)
+				Deus.execute_pipeline(OverlaySyncPipeline, node, comp)
+				Deus.execute_pipeline(GameStateSoundPipeline, node, comp)
 	)
 
 	# DamagePipeline and DestructionPipeline are event-driven -- not scheduled, only fire on collision

@@ -23,7 +23,7 @@ static func _stage_animate(context):
 		overlay.pivot_offset = overlay.size * 0.5
 		overlay.scale = Vector2.ZERO
 		overlay.modulate.a = 0.0
-		var tween = context._node.create_tween()
+		var tween = world.create_tween()
 		tween.set_parallel(true)
 		tween.tween_property(overlay, "scale", Vector2.ONE, FADE_DURATION) \
 			.set_ease(Tween.EASE_OUT) \
